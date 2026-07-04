@@ -246,7 +246,7 @@ body {
 .nav-btn::after {
   content: "";
   position: absolute;
-  top: -11px;
+  top: -9px;
   left: 50%;
   translate: -50% 0;
   width: 60px;
