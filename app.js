@@ -37,6 +37,19 @@
 
   if (isAndroidWebView) {
     document.documentElement.classList.add('android-webview');
+
+    // Override Android system font scaling — prevents user's font size
+    // setting from enlarging the app UI in the WebView
+    const originalSetProperty = CSSStyleDeclaration.prototype.setProperty;
+    try {
+      // Force root font size to 16px regardless of system font scale
+      document.documentElement.style.setProperty('font-size', '16px', 'important');
+
+      // Re-apply on any resize (orientation change, etc.)
+      window.addEventListener('resize', () => {
+        document.documentElement.style.setProperty('font-size', '16px', 'important');
+      }, { passive: true });
+    } catch(e) {}
   }
 })();
 
@@ -1045,6 +1058,25 @@ let state = {
 function escHtml(str) {
   if (!str) return '';
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// ── Lightweight count-up for stat numbers ─────────────────
+// Uses requestAnimationFrame — zero layout cost, compositor only
+function countUp(el, target, duration = 600, suffix = '') {
+  if (!el) return;
+  const isFloat = String(target).includes('.');
+  const start = performance.now();
+  const from = 0;
+  function step(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    // ease-out quad
+    const eased = 1 - (1 - progress) * (1 - progress);
+    const val = from + (target - from) * eased;
+    el.textContent = isFloat ? val.toFixed(1) + suffix : Math.round(val) + suffix;
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
 }
 
 function formatDate(dateStr) {
@@ -4096,9 +4128,11 @@ function renderProgress() {
   const totalSessEl = document.getElementById('prog-total-sessions');
   const totalVolEl  = document.getElementById('prog-total-volume');
   const totalPrsEl  = document.getElementById('prog-total-prs');
-  if (totalSessEl) totalSessEl.textContent = sessions.length;
-  if (totalVolEl)  totalVolEl.textContent  = totalVolume >= 1000 ? (totalVolume / 1000).toFixed(1) + 'k' : Math.round(totalVolume);
-  if (totalPrsEl)  totalPrsEl.textContent  = Object.keys(prs).length;
+  if (totalSessEl) countUp(totalSessEl, sessions.length, 500);
+  if (totalVolEl)  totalVolume >= 1000
+    ? countUp(totalVolEl, totalVolume / 1000, 600, 'k')
+    : countUp(totalVolEl, Math.round(totalVolume), 600);
+  if (totalPrsEl)  countUp(totalPrsEl, Object.keys(prs).length, 400);
 
   populateChartSelect(sessions);
   renderChart();
