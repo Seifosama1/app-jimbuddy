@@ -1096,6 +1096,17 @@ const EXERCISE_LIBRARY = [
 
 const MUSCLE_GROUPS = ['All', 'Chest', 'Back', 'Shoulders', 'Legs', 'Arms', 'Core', 'Cardio'];
 
+const MUSCLE_COLORS = {
+  'Chest':     '#00e5a0',
+  'Back':      '#00b4d8',
+  'Shoulders': '#7c6fff',
+  'Legs':      '#ff6b9d',
+  'Arms':      '#ffb830',
+  'Core':      '#ff7f50',
+  'Cardio':    '#ff4757',
+  'Full Body': '#00e5a0',
+};
+
 const MUSCLE_EMOJIS = {
   'Chest':     (sz = 28) => JBIcons.muscleIcon('Chest',     sz),
   'Back':      (sz = 28) => JBIcons.muscleIcon('Back',      sz),

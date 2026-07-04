@@ -7710,3 +7710,39 @@ html.no-blur .gymbro-friend-card {
   transform: none !important;
 }
    
+
+/* ── Teal ghost button (View buttons on dashboard cards) ── */
+.btn-teal-ghost {
+  background: rgba(0, 229, 160, 0.06);
+  border: 1px solid rgba(0, 229, 160, 0.35);
+  color: var(--accent) !important;
+  font-weight: 600;
+}
+.btn-teal-ghost:hover,
+.btn-teal-ghost:active {
+  background: rgba(0, 229, 160, 0.14);
+  border-color: var(--accent);
+}
+
+/* ── Exercise card muscle group border ── */
+.exercise-card {
+  border-left-width: 3px !important;
+  border-left-style: solid !important;
+  padding-left: 12px;
+}
+
+/* ── Exercise card add button ── */
+.exercise-add-btn {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 12px !important;
+  padding: 0 !important;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}

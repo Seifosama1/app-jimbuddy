@@ -3528,16 +3528,13 @@ function filterExercises() {
     <div class="exercise-group">
       <div class="exercise-group-title">${(MUSCLE_EMOJIS[muscle] ? MUSCLE_EMOJIS[muscle](16) : '')} ${muscle}</div>
       ${visible.map(e => `
-        <div class="exercise-card">
+        <div class="exercise-card" style="border-left: 3px solid ${MUSCLE_COLORS[muscle] || 'var(--accent)'}; cursor:pointer;" onclick="openExerciseViewModal('${e.id}')">
           <div class="exercise-info" style="flex:1">
             <div class="exercise-name">${escHtml(e.name)}</div>
             <div class="exercise-meta">${e.isCardio ? 'Cardio' : `${e.sets} sets × ${e.reps} reps · ${e.rest}s rest`}</div>
             ${prs[e.id] ? `<div class="exercise-pr">PR: ${prs[e.id].weight}kg</div>` : ''}
           </div>
-          <div style="display:flex;gap:8px">
-            <button class="btn btn-sm btn-ghost view-btn" onclick="event.stopPropagation(); openExerciseViewModal('${e.id}')">View</button>
-            <button class="btn btn-sm btn-primary" onclick="event.stopPropagation(); addToWorkoutQueue('${e.id}', '${escHtml(e.name)}')" style="padding:6px 12px">+ add</button>
-          </div>
+          <button class="btn btn-primary exercise-add-btn" onclick="event.stopPropagation(); addToWorkoutQueue('${e.id}', '${escHtml(e.name)}')">+</button>
         </div>`).join('')}
       ${remaining > 0 ? `
         <button class="btn btn-sm btn-ghost load-more-exercises-btn" onclick="toggleExerciseGroupExpand('${muscleKey}')">
