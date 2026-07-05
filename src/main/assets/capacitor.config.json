@@ -1,0 +1,29 @@
+{
+	"appId": "com.jimbuddy.gymtracker.v1",
+	"appName": "Jim Buddy 1.0",
+	"webDir": "www",
+	"server": {
+		"androidScheme": "https",
+		"url": "https://jim-buddy-apk.vercel.app/"
+	},
+	"android": {
+		"backgroundColor": "#0A0A0F",
+		"allowMixedContent": false,
+		"captureInput": true,
+		"webContentsDebuggingEnabled": false,
+		"adjustMarginsForEdgeToEdge": "auto"
+	},
+	"plugins": {
+		"SplashScreen": {
+			"launchShowDuration": 0,
+			"launchAutoHide": true,
+			"backgroundColor": "#0A0A0F",
+			"androidSplashResourceName": "splash",
+			"showSpinner": false
+		},
+		"StatusBar": {
+			"style": "Dark",
+			"backgroundColor": "#0A0A0F"
+		}
+	}
+}
