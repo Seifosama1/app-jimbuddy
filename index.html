@@ -557,7 +557,7 @@
             </div>
 
             <!-- NEW: Personal Records Section on Home Page -->
-            <div class="card" style="margin-top: 8px">
+            <div class="card" style="margin-top: 16px">
               <div class="card-row">
                 <div>
                   <h3 class="card-title">
@@ -591,12 +591,12 @@
                   No PRs yet. Complete workouts or use 1RM calculator!
                 </p>
               </div>
-            <retry now/div>
+            </div>
 
             <!-- Leaderboard (logged-in users only) -->
             <div
               id="leaderboard-home-card"
-              style="display: none; margin-top: 8px"
+              style="display: none; margin-top: 16px"
             >
               <div class="card leaderboard-card">
                 <div class="card-row" style="margin-bottom: 12px">
@@ -642,39 +642,26 @@
             </div>
 
             <!-- Recent Sessions -->
-            <div class="section-header">
-              <h2 class="section-title">Recent Sessions</h2>
-              <button
-                class="btn btn-sm btn-ghost"
-                onclick="navigate('progress')"
-              >
-                See all
-              </button>
-            </div>
-            <div id="recent-sessions-list">
-              <div class="empty-state">
-                <span class="empty-icon"
-                  ><svg
-                    width="32"
-                    height="32"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.7"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
-                  >
-                    <line x1="8.5" y1="12" x2="15.5" y2="12" />
-                    <rect x="5.5" y="9.5" width="2" height="5" rx="0.5" />
-                    <rect x="3" y="8" width="2.5" height="8" rx="0.5" />
-                    <rect x="16.5" y="9.5" width="2" height="5" rx="0.5" />
-                    <rect x="18.5" y="8" width="2.5" height="8" rx="0.5" /></svg
-                ></span>
-                <p>No sessions yet. Start your first workout!</p>
-                <button class="btn btn-primary" onclick="navigate('workouts')">
-                  Browse Workouts
-                </button>
+            <div class="card" style="margin-top: 16px">
+              <div class="card-row" style="margin-bottom: 12px">
+                <h3 class="card-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="8.5" y1="12" x2="15.5" y2="12"/>
+                    <rect x="5.5" y="9.5" width="2" height="5" rx="0.5"/>
+                    <rect x="3" y="8" width="2.5" height="8" rx="0.5"/>
+                    <rect x="16.5" y="9.5" width="2" height="5" rx="0.5"/>
+                    <rect x="18.5" y="8" width="2.5" height="8" rx="0.5"/>
+                  </svg>
+                  Recent Sessions
+                </h3>
+                <button class="btn btn-sm btn-ghost" onclick="navigate('progress')">See all</button>
+              </div>
+              <div id="recent-sessions-list">
+                <div class="empty-state">
+                  <span class="empty-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8.5" y1="12" x2="15.5" y2="12"/><rect x="5.5" y="9.5" width="2" height="5" rx="0.5"/><rect x="3" y="8" width="2.5" height="8" rx="0.5"/><rect x="16.5" y="9.5" width="2" height="5" rx="0.5"/><rect x="18.5" y="8" width="2.5" height="8" rx="0.5"/></svg></span>
+                  <p>No sessions yet. Start your first workout!</p>
+                  <button class="btn btn-primary" onclick="navigate('workouts')">Browse Workouts</button>
+                </div>
               </div>
             </div>
 
@@ -2060,52 +2047,50 @@
 
             <!-- Daily Summary Card -->
             <div class="calorie-summary-card">
-              <div class="calorie-summary-header">
-                <div>
-                  <span class="calorie-summary-label">Net Calories</span>
-                  <span class="calorie-summary-value" id="calorie-net">0</span>
-                  <span class="calorie-summary-unit">kcal</span>
+              <!-- Ring + Macros Center -->
+              <div class="cal-ring-section">
+                <!-- SVG Donut Ring -->
+                <div class="cal-ring-wrap">
+                  <svg class="cal-ring-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                    <circle class="cal-ring-bg" cx="60" cy="60" r="52"/>
+                    <circle class="cal-ring-fill" id="calorie-ring-fill" cx="60" cy="60" r="52"
+                      stroke-dasharray="326.73"
+                      stroke-dashoffset="326.73"
+                    />
+                  </svg>
+                  <div class="cal-ring-inner">
+                    <span class="cal-ring-value" id="calorie-net">0</span>
+                    <span class="cal-ring-unit">kcal</span>
+                    <span class="cal-ring-goal">of <span id="calorie-goal-text">2000</span></span>
+                  </div>
                 </div>
-                <div class="calorie-goal-display">
-                  <span id="calorie-goal-text">2000</span>
-                  <span class="calorie-goal-label">Daily Goal</span>
+
+                <!-- Macro chips below ring -->
+                <div class="cal-macro-row" id="calorie-macros">
+                  <div class="cal-macro-chip protein">
+                    <span class="cal-macro-label">Protein</span>
+                    <span class="cal-macro-val"><span id="protein-total">0</span>g</span>
+                  </div>
+                  <div class="cal-macro-chip carbs">
+                    <span class="cal-macro-label">Carbs</span>
+                    <span class="cal-macro-val"><span id="carbs-total">0</span>g</span>
+                  </div>
+                  <div class="cal-macro-chip fats">
+                    <span class="cal-macro-label">Fats</span>
+                    <span class="cal-macro-val"><span id="fats-total">0</span>g</span>
+                  </div>
                 </div>
               </div>
-              <div class="progress-bar-wrap">
-                <div
-                  class="progress-bar"
-                  id="calorie-progress-bar"
-                  style="width: 0%"
-                ></div>
-              </div>
-              <!-- Calorie Eaten & Burnt breakdown -->
+
+              <!-- Eaten & Burnt row -->
               <div class="calorie-breakdown">
                 <div class="breakdown-item">
-                  <span class="breakdown-label">📥 Food (Eaten)</span>
+                  <span class="breakdown-label">📥 EATEN</span>
                   <span class="breakdown-val" id="calorie-eaten">0 kcal</span>
                 </div>
                 <div class="breakdown-item">
-                  <span class="breakdown-label">📤 Cardio (Burnt)</span>
-                  <span
-                    class="breakdown-val"
-                    id="calorie-burnt"
-                    style="color: var(--accent2)"
-                    >-0 kcal</span
-                  >
-                </div>
-              </div>
-              <div class="calorie-macros" id="calorie-macros">
-                <div class="macro-item">
-                  <span class="macro-dot protein"></span>Protein:
-                  <span id="protein-total">0</span>g
-                </div>
-                <div class="macro-item">
-                  <span class="macro-dot carbs"></span>Carbs:
-                  <span id="carbs-total">0</span>g
-                </div>
-                <div class="macro-item">
-                  <span class="macro-dot fats"></span>Fats:
-                  <span id="fats-total">0</span>g
+                  <span class="breakdown-label">📤 BURNT</span>
+                  <span class="breakdown-val" id="calorie-burnt" style="color: var(--accent2)">-0 kcal</span>
                 </div>
               </div>
             </div>

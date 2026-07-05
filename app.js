@@ -1920,15 +1920,18 @@ function renderCalorieTracker() {
   if (calEatenEl) calEatenEl.textContent = `${Math.round(totals.calories)} kcal`;
   if (calBurntEl) calBurntEl.textContent = `-${burntToday} kcal`;
 
-  // ── Goal & progress bar ─────────────────────────────────────────
+  // ── Goal & progress ring ─────────────────────────────────────────
   const goalTextEl = document.getElementById('calorie-goal-text');
   if (goalTextEl) goalTextEl.textContent = goalCal;
   const percent  = Math.min(100, (netCalories / goalCal) * 100);
   const goalHitC = netCalories >= goalCal;
-  const progressBar = document.getElementById('calorie-progress-bar');
-  if (progressBar) {
-    progressBar.style.width = percent + '%';
-    progressBar.classList.toggle('goal-reached', goalHitC);
+  
+  // Circumference of radius 52 circle = 2 * PI * 52 = 326.73
+  const ringFill = document.getElementById('calorie-ring-fill');
+  if (ringFill) {
+    const offset = 326.73 - (326.73 * (percent / 100));
+    ringFill.style.strokeDashoffset = offset;
+    ringFill.classList.toggle('goal-reached', goalHitC);
   }
 
   // ── Calorie card glow ─────────────────────────────────────────
@@ -5317,6 +5320,7 @@ function renderWorkoutQueue() {
 
 }
 
+
 // Open modal to log sets for a queued exercise
 function openQueueExerciseModal(queueIndex) {
   const exercise = workoutQueue[queueIndex];
@@ -5989,6 +5993,29 @@ document.addEventListener('DOMContentLoaded', () => {
   displaySavedProfile();
   loadSavedProfile();
   loadWorkoutQueue();
+
+  // Dynamic inputmode setup for inputs requiring numeric keyboards (Capacitor/Mobile UX)
+  function applyNumericKeyboardModes() {
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+      if (input.hasAttribute('inputmode')) return;
+      const step = input.getAttribute('step') || '';
+      if (step.includes('.') || step === 'any') {
+        input.setAttribute('inputmode', 'decimal');
+      } else {
+        input.setAttribute('inputmode', 'numeric');
+      }
+    });
+  }
+  applyNumericKeyboardModes();
+  // Target dynamically rendered inputs in future modals
+  document.addEventListener('focusin', (e) => {
+    if (e.target && e.target.tagName === 'INPUT' && e.target.type === 'number') {
+      if (!e.target.hasAttribute('inputmode')) {
+        const step = e.target.getAttribute('step') || '';
+        e.target.setAttribute('inputmode', (step.includes('.') || step === 'any') ? 'decimal' : 'numeric');
+      }
+    }
+  });
 
   // ── STAGE 1 + 2: GPU Tile Warmup (runs DURING the splash screen) ────────
   // Problem: Android WebView uses lazy tile rasterization. On cold start,
@@ -6985,10 +7012,30 @@ async function saveHydrationReminderSettings() {
 
   if (hydrationInterval) clearInterval(hydrationInterval);
 
+  const b = window.AndroidNotificationBridge;
   if (settings.enabled) {
     // Request permission now — we're inside a button-click handler (user gesture)
     await requestNotificationPermission();
+    
+    if (b && typeof b.setupBackgroundReminders === 'function') {
+      try {
+        b.setupBackgroundReminders('💧 Jim Buddy', settings.message, intervalSeconds, settings.startTime, settings.endTime);
+        console.log('[NotificationBridge] Native background reminder scheduled successfully');
+      } catch (e) {
+        console.warn('[NotificationBridge] Failed to schedule native background reminder:', e);
+      }
+    }
+    
     startHydrationReminders(intervalSeconds);
+  } else {
+    if (b && typeof b.cancelBackgroundReminders === 'function') {
+      try {
+        b.cancelBackgroundReminders();
+        console.log('[NotificationBridge] Native background reminders cancelled');
+      } catch (e) {
+        console.warn('[NotificationBridge] Failed to cancel native background reminders:', e);
+      }
+    }
   }
 
   const label = HYDRATION_INTERVAL_OPTIONS.find(o => o.value === intervalSeconds)?.label || `${intervalSeconds}s`;
@@ -7011,6 +7058,15 @@ function startHydrationReminders(intervalSeconds) {
   hydrationInterval = setInterval(() => {
     checkAndSendReminder();
   }, tickMs);
+
+  // Sync native scheduler configuration on startup if running inside Android WebView
+  const b = window.AndroidNotificationBridge;
+  const s = DB.get('hydrationReminders');
+  if (s && s.enabled && b && typeof b.setupBackgroundReminders === 'function') {
+    try {
+      b.setupBackgroundReminders('💧 Jim Buddy', s.message || '💧 Time to hydrate!', intervalSeconds, s.startTime || '08:00', s.endTime || '22:00');
+    } catch(e) {}
+  }
 }
 
 function checkAndSendReminder() {
