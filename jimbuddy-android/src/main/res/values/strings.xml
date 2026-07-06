@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">JimBuddy</string>
+    <string name="title_activity_main">JimBuddy</string>
+    <string name="package_name">com.jimbuddy.gymtracker.v1</string>
+    <string name="custom_url_scheme">com.jimbuddy.gymtracker.v1</string>
+</resources>
