@@ -1,6 +1,6 @@
 {
   "appId": "com.jimbuddy.gymtracker.v1",
-  "appName": "Jim Buddy 1.0",
+  "appName": "JimBuddy",
   "webDir": "www",
   "server": {
     "androidScheme": "https",
