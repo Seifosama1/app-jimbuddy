@@ -826,25 +826,31 @@
         const totalSets = item.sets || 3;
         
         return `
-          <div class="workout-queue-item ${item.completed ? 'completed' : ''}">
-            <div class="workout-queue-item-info" style="flex:1">
-              <div class="workout-queue-item-name">
-                <span class="workout-queue-status ${item.completed ? 'completed' : ''}">
-                  ${item.completed ? '<span class="ic ic-done"></span>' : (hasData ? '<span class="ic ic-note"></span>' : '<span class="ic ic-empty"></span>')}
-                </span>
-                ${escHtml(item.name)}
-              </div>
-              <div class="workout-queue-item-detail">
-                ${item.isCardio ? 'Cardio' : `${item.sets} sets × ${item.reps} reps · ${item.rest}s rest`}
-                ${hasData ? ` · Logged: ${completedSets}/${totalSets} sets` : ''}
-                ${item.completed && item.maxWeight > 0 ? ` · Max: ${item.maxWeight}kg` : ''}
-              </div>
+          <div class="workout-queue-item ${item.completed ? 'completed' : ''}" data-queue-idx="${idx}">
+            <div class="queue-swipe-delete-hint" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+              Remove
             </div>
-            <div style="display:flex; gap: 6px;">
-              <button class="btn btn-sm btn-primary" style="padding: 4px 10px; font-size: 11px;" onclick="event.stopPropagation(); openQueueExerciseModal(${idx})">
-                ${hasData ? `${JBIcons.svg('pencil', { size: 14, color: 'currentColor' })} Edit` : '<span class="ic ic-note"></span> Log'}
-              </button>
-              <button class="workout-queue-remove" onclick="event.stopPropagation(); removeFromQueue(${idx})" title="Remove">✕</button>
+            <div class="queue-swipe-inner">
+              <div class="workout-queue-item-info" style="flex:1">
+                <div class="workout-queue-item-name">
+                  <span class="workout-queue-status ${item.completed ? 'completed' : ''}">
+                    ${item.completed ? '<span class="ic ic-done"></span>' : (hasData ? '<span class="ic ic-note"></span>' : '<span class="ic ic-empty"></span>')}
+                  </span>
+                  ${escHtml(item.name)}
+                </div>
+                <div class="workout-queue-item-detail">
+                  ${item.isCardio ? 'Cardio' : `${item.sets} sets × ${item.reps} reps · ${item.rest}s rest`}
+                  ${hasData ? ` · Logged: ${completedSets}/${totalSets} sets` : ''}
+                  ${item.completed && item.maxWeight > 0 ? ` · Max: ${item.maxWeight}kg` : ''}
+                </div>
+              </div>
+              <div style="display:flex; gap: 6px;">
+                <button class="btn btn-sm btn-primary" style="padding: 4px 10px; font-size: 11px;" onclick="event.stopPropagation(); openQueueExerciseModal(${idx})">
+                  ${hasData ? `${JBIcons.svg('pencil', { size: 14, color: 'currentColor' })} Edit` : `${JBIcons.svg('pencil', { size: 14, color: 'currentColor' })} Log`}
+                </button>
+                <button class="workout-queue-remove" onclick="event.stopPropagation(); removeFromQueue(${idx})" title="Remove">✕</button>
+              </div>
             </div>
           </div>
         `;
@@ -852,6 +858,13 @@
       
       container.textContent = '';
       container.insertAdjacentHTML('afterbegin', html);
+
+      // Attach swipe-to-delete on every rendered item
+      container.querySelectorAll('.workout-queue-item[data-queue-idx]').forEach(el => {
+        if (typeof attachQueueSwipe === 'function') {
+          attachQueueSwipe(el);
+        }
+      });
     };
   }
 

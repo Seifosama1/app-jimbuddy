@@ -931,6 +931,7 @@
               <div style="display: flex; gap: 10px; margin-bottom: 16px">
                 <input
                   type="number"
+                  inputmode="decimal"
                   id="plate-target-weight"
                   placeholder="Target Weight (kg)"
                   class="form-input"
@@ -2244,6 +2245,7 @@
                 <label class="form-label">Age (years)</label>
                 <input
                   type="number"
+                  inputmode="numeric"
                   class="form-input"
                   id="calc-age"
                   placeholder="e.g., 25"
@@ -2257,6 +2259,7 @@
                   <label class="form-label">Weight (kg)</label>
                   <input
                     type="number"
+                    inputmode="decimal"
                     class="form-input"
                     id="calc-weight"
                     placeholder="e.g., 75"
@@ -2267,6 +2270,7 @@
                   <label class="form-label">Height (cm)</label>
                   <input
                     type="number"
+                    inputmode="numeric"
                     class="form-input"
                     id="calc-height"
                     placeholder="e.g., 175"
@@ -2929,6 +2933,7 @@
             <label class="form-label">Target Weight (kg)</label>
             <input
               type="number"
+              inputmode="decimal"
               class="form-input"
               id="gm-weight"
               placeholder="e.g. 100"
@@ -3459,6 +3464,7 @@
             <label class="form-label">Number of Reps</label>
             <input
               type="number"
+              inputmode="numeric"
               class="form-input"
               id="rm-reps"
               placeholder="Reps performed (1-10)"
@@ -5069,6 +5075,40 @@
                   >
                 </div>
               </button>
+              <button
+                class="chat-quick-item"
+                onclick="
+                  suggestWorkoutTime();
+                  toggleChatQuickActions();
+                "
+              >
+                <span class="chat-quick-item-icon"
+                  ><svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                    <circle cx="12" cy="14" r="2" />
+                    <polyline points="12 12 12 14 14 14" />
+                  </svg>
+                </span>
+                <div class="chat-quick-item-info">
+                  <span class="chat-quick-item-title">Suggest Workout Time</span>
+                  <span class="chat-quick-item-sub"
+                    >Invite to hit the gym at a specific time</span
+                  >
+                </div>
+              </button>
             </div>
             <div class="chat-input-wrap">
               <button
@@ -5253,6 +5293,10 @@
             ></ol>
           </div>
         </div>
+        <div class="modal-footer" style="padding: 10px 16px; border-top: 1px solid var(--card-border); display: flex; gap: 8px;">
+          <button id="evm-add-queue-btn" class="btn btn-primary" style="flex: 1;">+ Add to Queue</button>
+          <button class="btn btn-ghost" onclick="closeExerciseViewModal()">Close</button>
+        </div>
       </div>
     </div>
 
@@ -5271,43 +5315,43 @@
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
             <div class="form-group">
               <label class="form-label">Weight (kg)</label>
-              <input type="number" step="0.1" id="ib-weight" class="form-input" placeholder="70.0"/>
+              <input type="number" step="0.1" inputmode="decimal" id="ib-weight" class="form-input" placeholder="70.0"/>
             </div>
             <div class="form-group">
               <label class="form-label">Body Fat %</label>
-              <input type="number" step="0.1" id="ib-bodyfat" class="form-input" placeholder="20.0"/>
+              <input type="number" step="0.1" inputmode="decimal" id="ib-bodyfat" class="form-input" placeholder="20.0"/>
             </div>
             <div class="form-group">
               <label class="form-label">Skeletal Muscle (kg)</label>
-              <input type="number" step="0.1" id="ib-muscle" class="form-input" placeholder="30.0"/>
+              <input type="number" step="0.1" inputmode="decimal" id="ib-muscle" class="form-input" placeholder="30.0"/>
             </div>
             <div class="form-group">
               <label class="form-label">BMI</label>
-              <input type="number" step="0.1" id="ib-bmi" class="form-input" placeholder="22.0"/>
+              <input type="number" step="0.1" inputmode="decimal" id="ib-bmi" class="form-input" placeholder="22.0"/>
             </div>
             <div class="form-group">
               <label class="form-label">Visceral Fat Level</label>
-              <input type="number" step="1" id="ib-visceral" class="form-input" placeholder="5"/>
+              <input type="number" step="1" inputmode="numeric" id="ib-visceral" class="form-input" placeholder="5"/>
             </div>
             <div class="form-group">
               <label class="form-label">Total Body Water (L)</label>
-              <input type="number" step="0.1" id="ib-water" class="form-input" placeholder="35.0"/>
+              <input type="number" step="0.1" inputmode="decimal" id="ib-water" class="form-input" placeholder="35.0"/>
             </div>
             <div class="form-group">
               <label class="form-label">Protein (kg)</label>
-              <input type="number" step="0.1" id="ib-protein" class="form-input" placeholder="10.0"/>
+              <input type="number" step="0.1" inputmode="decimal" id="ib-protein" class="form-input" placeholder="10.0"/>
             </div>
             <div class="form-group">
               <label class="form-label">Minerals (kg)</label>
-              <input type="number" step="0.1" id="ib-minerals" class="form-input" placeholder="3.5"/>
+              <input type="number" step="0.1" inputmode="decimal" id="ib-minerals" class="form-input" placeholder="3.5"/>
             </div>
             <div class="form-group">
               <label class="form-label">Body Fat Mass (kg)</label>
-              <input type="number" step="0.1" id="ib-fatmass" class="form-input" placeholder="14.0"/>
+              <input type="number" step="0.1" inputmode="decimal" id="ib-fatmass" class="form-input" placeholder="14.0"/>
             </div>
             <div class="form-group">
               <label class="form-label">Lean Body Mass (kg)</label>
-              <input type="number" step="0.1" id="ib-lean" class="form-input" placeholder="56.0"/>
+              <input type="number" step="0.1" inputmode="decimal" id="ib-lean" class="form-input" placeholder="56.0"/>
             </div>
           </div>
           <div class="form-group" style="margin-top:8px;">

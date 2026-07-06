@@ -3,7 +3,7 @@
    Offline caching + Rich Push Notifications
 ══════════════════════════════════════════ */
 
-const CACHE_NAME = 'jim-buddy-v2.1.0';
+const CACHE_NAME = 'jim-buddy-v2.1.1';
 const urlsToCache = [
   '/',
   '/index.html',
