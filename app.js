@@ -7341,32 +7341,17 @@ async function sendChatNotification(senderId, content, chatId) {
   const modalOpen = chatModal && chatModal.classList.contains('open');
   if (modalOpen && activeChatFriendId === senderId) return;
 
+  // Don't notify if permission not granted
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+
   // Get sender name from cache or fallback
   const senderInfo = _chatNotifNameCache[senderId];
   const senderName = senderInfo?.username || 'Your Gymbro';
+  const senderAvatar = senderInfo?.avatar || '💪';
 
   // Truncate long messages
   const body = content.length > 80 ? content.substring(0, 77) + '...' : content;
 
-  // PRIORITY 1: Native Android bridge (works even when app is backgrounded,
-  // same as hydration notifications). AndroidNotificationBridge is injected
-  // by MainActivity.java and bypasses the Web Notification API entirely,
-  // showing real Android system notifications from the native channel.
-  const b = window.AndroidNotificationBridge;
-  if (b && typeof b.showChatNotification === 'function') {
-    try {
-      b.showChatNotification(senderName, body, senderId || '', chatId || '');
-      console.log('[ChatNotif] Sent via Android native bridge ✅');
-      return;
-    } catch (e) {
-      console.warn('[ChatNotif] Native bridge failed, falling back:', e);
-    }
-  }
-
-  // Don't proceed if permission not granted (for Web API fallback)
-  if (!('Notification' in window) || Notification.permission !== 'granted') return;
-
-  const senderAvatar = senderInfo?.avatar || '💪';
   const title = `${senderAvatar} ${senderName}`;
   const options = {
     body,
@@ -7390,7 +7375,7 @@ async function sendChatNotification(senderId, content, chatId) {
     }
   };
 
-  // PRIORITY 2: Service Worker showNotification (works in background when SW is active)
+  // Try via Service Worker first (works in background / Android)
   const reg = await _getSwReg();
   if (reg) {
     try {
@@ -7401,7 +7386,7 @@ async function sendChatNotification(senderId, content, chatId) {
     }
   }
 
-  // PRIORITY 3: Direct Notification API (works when tab is focused)
+  // Fallback: direct Notification API
   try {
     new Notification(title, options);
   } catch (e) {
