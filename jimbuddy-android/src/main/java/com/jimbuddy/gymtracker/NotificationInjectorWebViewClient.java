@@ -36,7 +36,6 @@ public class NotificationInjectorWebViewClient extends WebViewClient {
 
     // This script is injected into the HTML <head> and runs BEFORE any other scripts.
     // It creates window.Notification as a mock that delegates to the native bridge.
-    // Also provides showChatNotification support via the native bridge for chat messages.
     private static final String INJECTION_SCRIPT =
         "<script id=\"__jb_notif_bridge\">" +
         "(function(){" +
@@ -65,25 +64,6 @@ public class NotificationInjectorWebViewClient extends WebViewClient {
         "  return Promise.resolve('granted');" +
         "};" +
         "window.Notification=N;" +
-        "}" +
-        "// Expose showChatNotification bridge for chat message notifications" +
-        "if(!window.__jb_chat_notif_bridge){" +
-        "  window.__jb_chat_notif_bridge=true;" +
-        "  if(!window._jbNativeSendChatNotification){" +
-        "    window._jbNativeSendChatNotification=function(senderId,content,chatId){" +
-        "      var cn=window._chatNotifNameCache||{};" +
-        "      var si=cn[senderId]||{};" +
-        "      var sn=si.username||'Your Gymbro';" +
-        "      try{" +
-        "        var b=window.AndroidNotificationBridge;" +
-        "        if(b&&typeof b.showChatNotification==='function'){" +
-        "          b.showChatNotification(sn,content||'New message',senderId||'',chatId||'');" +
-        "          return true;" +
-        "        }" +
-        "      }catch(e){}" +
-        "      return false;" +
-        "    };" +
-        "  }" +
         "}" +
         "console.log('[JB] Native notification bridge ready immediately');" +
         "})();" +

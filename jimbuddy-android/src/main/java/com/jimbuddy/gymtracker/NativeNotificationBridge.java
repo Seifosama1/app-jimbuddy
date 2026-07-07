@@ -34,12 +34,9 @@ import android.util.Log;
 public class NativeNotificationBridge {
 
     private static final String TAG = "NativeNotifBridge";
-    private static final String CHANNEL_HYDRATION_ID = "jimbuddy_hydration";
-    private static final String CHANNEL_HYDRATION_NAME = "Hydration Reminders";
-    private static final String CHANNEL_HYDRATION_DESC = "Reminders to drink water throughout the day";
-    private static final String CHANNEL_CHAT_ID = "jimbuddy_chat";
-    private static final String CHANNEL_CHAT_NAME = "Chat Messages";
-    private static final String CHANNEL_CHAT_DESC = "New messages from your gymbros";
+    private static final String CHANNEL_ID = "jimbuddy_hydration";
+    private static final String CHANNEL_NAME = "Hydration Reminders";
+    private static final String CHANNEL_DESC = "Reminders to drink water throughout the day";
 
     private final Context context;
     private final NotificationManager notificationManager;
@@ -48,47 +45,34 @@ public class NativeNotificationBridge {
         this.context = context;
         this.notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        createNotificationChannels();
+        createNotificationChannel();
     }
 
     /**
-     * Create notification channels (required for Android 8.0+).
+     * Create the notification channel (required for Android 8.0+).
      * Must be called before any notification is posted.
      */
-    private void createNotificationChannels() {
+    private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Hydration channel
-            NotificationChannel hydrationChannel = new NotificationChannel(
-                    CHANNEL_HYDRATION_ID,
-                    CHANNEL_HYDRATION_NAME,
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    CHANNEL_NAME,
                     NotificationManager.IMPORTANCE_HIGH
             );
-            hydrationChannel.setDescription(CHANNEL_HYDRATION_DESC);
-            hydrationChannel.enableVibration(true);
+            channel.setDescription(CHANNEL_DESC);
+            channel.enableVibration(true);
+
+            // Use the default notification sound
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_NOTIFICATION)
                     .build();
-            hydrationChannel.setSound(
+            channel.setSound(
                     RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION),
                     audioAttributes
             );
-            notificationManager.createNotificationChannel(hydrationChannel);
-            Log.d(TAG, "Hydration channel created: " + CHANNEL_HYDRATION_ID);
 
-            // Chat channel
-            NotificationChannel chatChannel = new NotificationChannel(
-                    CHANNEL_CHAT_ID,
-                    CHANNEL_CHAT_NAME,
-                    NotificationManager.IMPORTANCE_HIGH
-            );
-            chatChannel.setDescription(CHANNEL_CHAT_DESC);
-            chatChannel.enableVibration(true);
-            chatChannel.setSound(
-                    RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION),
-                    audioAttributes
-            );
-            notificationManager.createNotificationChannel(chatChannel);
-            Log.d(TAG, "Chat channel created: " + CHANNEL_CHAT_ID);
+            notificationManager.createNotificationChannel(channel);
+            Log.d(TAG, "Notification channel created: " + CHANNEL_ID);
         }
     }
 
@@ -115,6 +99,8 @@ public class NativeNotificationBridge {
     @JavascriptInterface
     public void requestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // We cannot show the system dialog directly from @JavascriptInterface.
+            // Instead, we forward to the MainActivity which will handle the request.
             Log.d(TAG, "Notification permission requested — forwarding to activity");
         } else {
             Log.d(TAG, "Notification permission not needed pre-Android 13");
@@ -123,6 +109,11 @@ public class NativeNotificationBridge {
 
     /**
      * Show a native Android system notification for hydration reminders.
+     *
+     * @param title   Notification title (e.g., "💧 Jim Buddy")
+     * @param message Notification body (e.g., "Time to hydrate! 1200/2000ml")
+     * @param tag     Unique tag to group/collapse duplicate notifications
+     * @param id      Numeric ID for the notification (use 0 for auto-increment)
      */
     @JavascriptInterface
     public void showNotification(String title, String message, String tag, int id) {
@@ -143,6 +134,7 @@ public class NativeNotificationBridge {
         Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
         if (intent != null) {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            // Add a query param to navigate to the water tab
             intent.setData(Uri.parse("jimbuddy://water"));
         }
         PendingIntent pendingIntent = PendingIntent.getActivity(
@@ -159,7 +151,7 @@ public class NativeNotificationBridge {
         );
 
         // Build the notification
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_HYDRATION_ID)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .setLargeIcon(BitmapFactory.decodeResource(
                         context.getResources(), android.R.drawable.ic_dialog_info))
@@ -195,76 +187,7 @@ public class NativeNotificationBridge {
         notificationManager.cancel(notifTag, notificationId);
         notificationManager.notify(notifTag, notificationId, builder.build());
 
-        Log.d(TAG, "Native hydration notification shown: id=" + notificationId + ", tag=" + notifTag);
-    }
-
-    /**
-     * Show a native Android system notification for chat messages.
-     * This is exposed to JavaScript and works even when the app is backgrounded/killed
-     * (as long as the JS code calling it is executing in a service context).
-     */
-    @JavascriptInterface
-    public void showChatNotification(String senderName, String message, String senderId, String chatId) {
-        Log.d(TAG, "showChatNotification called: senderName=" + senderName + ", senderId=" + senderId + ", chatId=" + chatId);
-
-        // Check permission on Android 13+
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
-                    != PackageManager.PERMISSION_GRANTED) {
-                Log.w(TAG, "POST_NOTIFICATIONS permission not granted, cannot show chat notification");
-                return;
-            }
-        }
-
-        int notificationId = (int) ((System.currentTimeMillis() & 0xFFFFFFF) ^ (senderId != null ? senderId.hashCode() : 0));
-
-        // Truncate long messages
-        String body = (message != null && message.length() > 80)
-                ? message.substring(0, 77) + "..."
-                : (message != null ? message : "📨 New message");
-        String title = senderName != null ? senderName : "Your Gymbro";
-
-        // Create a PendingIntent that opens the app and navigates to gymbros tab
-        Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
-        if (intent != null) {
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setData(Uri.parse("jimbuddy://gymbros?friendId=" + (senderId != null ? senderId : "")));
-        }
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-                context, (int) (System.currentTimeMillis() & 0xFFFF), intent,
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
-        );
-
-        // Build the notification using the chat channel
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_CHAT_ID)
-                .setSmallIcon(android.R.drawable.ic_dialog_email)
-                .setLargeIcon(BitmapFactory.decodeResource(
-                        context.getResources(), android.R.drawable.ic_dialog_email))
-                .setContentTitle(title)
-                .setContentText(body)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setAutoCancel(true)
-                .setContentIntent(pendingIntent)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setDefaults(NotificationCompat.DEFAULT_ALL);
-
-        // Vibrate for chat messages
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-            if (vibrator != null && vibrator.hasVibrator()) {
-                vibrator.vibrate(VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE));
-            }
-        }
-
-        // Use sender-specific tag to collapse but allow renotify per sender
-        String notifTag = "jimbuddy-chat-" + (senderId != null ? senderId : "unknown");
-
-        notificationManager.cancel(notifTag, notificationId);
-        notificationManager.notify(notifTag, notificationId, builder.build());
-
-        Log.d(TAG, "Native chat notification shown: id=" + notificationId + ", tag=" + notifTag + ", sender=" + senderName);
+        Log.d(TAG, "Native notification shown: id=" + notificationId + ", tag=" + notifTag);
     }
 
     /**
