@@ -10107,8 +10107,8 @@ window.sendContactMessage = sendContactMessage;
 // ─── Download App (APK) ──────────────────────────────────
 function downloadApkFile() {
   const link = document.createElement('a');
-  link.href = 'app-debug.apk';
-  link.download = 'app-debug.apk';
+  link.href = 'app-release.apk';
+  link.download = 'app-release.apk';
   document.body.appendChild(link);
   link.click();
   link.remove();
