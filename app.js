@@ -652,7 +652,7 @@ async function generateDietPlanFromAI(targetCal, targetP, targetC, targetF, days
       console.warn('API endpoint not found (404). Falling back to direct Groq client-side request...');
       toast('🔌 Local API missing. Fetching directly from Grok AI...');
       
-const apiKey = GROK_API_KEY;
+      const apiKey = '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';
            const prompt = `Create a 7-day healthy meal plan for someone eating exactly ${targetCal} kcal per day.
 
 FOOD SELECTION RULES :

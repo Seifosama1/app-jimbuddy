@@ -19,11 +19,9 @@ export default async function handler(req, res) {
     days = 7
   } = req.body || {};
 
-const GROK_API_KEY = process.env.GROK_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY || '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';
+  if (!apiKey) { res.status(500).json({ error: 'API key not configured' }); return; }
 
-if (!GROK_API_KEY) {
-  console.error('❌ GROK_API_KEY environment variable is missing!');
-}
      const prompt = `Create a 7-day healthy meal plan for someone eating exactly ${targetCal} kcal per day.
 
 FOOD SELECTION RULES :
