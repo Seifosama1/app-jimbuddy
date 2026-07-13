@@ -7813,3 +7813,42 @@ html.no-blur .gymbro-friend-card {
   justify-content: center;
   flex-shrink: 0;
 }
+
+/* ─── Session Modal: + Set & ✓ All buttons ─── */
+.add-set-btn {
+  margin-right: 300px;
+  background: rgba(0, 229, 160, 0.12);
+  border: 1px solid rgba(0, 229, 160, 0.45);
+  color: var(--accent);
+  font-weight: 700;
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 12px;
+  transition: background var(--transition), border-color var(--transition);
+}
+.add-set-btn:hover,
+.add-set-btn:active {
+  background: rgba(0, 229, 160, 0.24);
+  border-color: var(--accent);
+}
+
+.check-all-btn {
+  background: linear-gradient(135deg, #00e5a0, #00c9b1);
+  border: none;
+  color: #0a0a0f;
+  font-weight: 800;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 11px;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  font-family: var(--font);
+  box-shadow: 0 2px 8px rgba(0, 229, 160, 0.35);
+  transition: filter var(--transition), transform 0.1s ease;
+}
+.check-all-btn:hover {
+  filter: brightness(1.12);
+}
+.check-all-btn:active {
+  transform: scale(0.93);
+}

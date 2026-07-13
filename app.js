@@ -218,7 +218,7 @@ const FOOD_DATABASE = [
   { id: 'apple', name: 'Apple', calories: 95, protein: 0.5, carbs: 25, fats: 0.3, serving: '1 medium' },
   { id: 'banana', name: 'Banana', calories: 105, protein: 1.3, carbs: 27, fats: 0.4, serving: '1 medium' },
   { id: 'chicken-breast', name: 'Chicken Breast', calories: 165, protein: 31, carbs: 0, fats: 3.6, serving: '100g' },
-  { id: 'rice', name: 'White Rice', calories: 130, protein: 2.7, carbs: 28, fats: 0.3, serving: '100g' },
+  { id: 'rice', name: '100gm White Rice', calories: 130, protein: 2.7, carbs: 28, fats: 0.3, serving: '100g' },
   { id: 'egg', name: 'Egg', calories: 78, protein: 6.3, carbs: 0.6, fats: 5.3, serving: '1 large' },
   { id: 'oatmeal', name: 'Oatmeal', calories: 158, protein: 5.5, carbs: 27, fats: 3.2, serving: '1 cup cooked' },
   { id: 'salmon', name: 'Salmon', calories: 208, protein: 22, carbs: 0, fats: 13, serving: '100g' },
@@ -228,9 +228,9 @@ const FOOD_DATABASE = [
   { id: 'protein-shake', name: 'Whey Protein', calories: 120, protein: 24, carbs: 3, fats: 1.5, serving: '1 scoop' },
   { id: 'avocado', name: 'Avocado', calories: 160, protein: 2, carbs: 8.5, fats: 15, serving: '100g' },
   { id: 'bread', name: 'Whole Wheat Bread', calories: 79, protein: 4, carbs: 13, fats: 1, serving: '1 slice' },
-  { id: 'pasta', name: 'Pasta', calories: 158, protein: 5.8, carbs: 31, fats: 1.1, serving: '100g' },
+  { id: 'pasta', name: '100gm Pasta', calories: 158, protein: 5.8, carbs: 31, fats: 1.1, serving: '100g' },
   { id: 'cheese', name: 'Cheddar Cheese', calories: 404, protein: 25, carbs: 1.3, fats: 33, serving: '100g' },
-  { id: 'milk', name: 'Milk (2%)', calories: 122, protein: 8, carbs: 12, fats: 5, serving: '1 cup' },
+  { id: 'milk', name: 'cup of Milk', calories: 122, protein: 8, carbs: 12, fats: 5, serving: '1 cup' },
   { id: 'almonds', name: 'Almonds', calories: 579, protein: 21, carbs: 22, fats: 49, serving: '100g' },
   { id: 'coffee', name: 'Black Coffee', calories: 2, protein: 0, carbs: 0, fats: 0, serving: '1 cup' },
   { id: 'pizza', name: 'Pizza Slice', calories: 285, protein: 12, carbs: 36, fats: 10, serving: '1 slice' },
@@ -268,7 +268,7 @@ const FOOD_DATABASE = [
 { id: 'turkey-breast', name: 'Turkey Breast (Deli Slices)', calories: 104, protein: 17, carbs: 1.1, fats: 2, serving: '100g' },
 { id: 'white-fish', name: 'Tilapia / White Fish (Grilled)', calories: 128, protein: 26, carbs: 0, fats: 2.7, serving: '100g' },
 { id: 'shrimp', name: 'Shrimp (Grilled or Boiled)', calories: 99, protein: 24, carbs: 0.2, fats: 0.3, serving: '100g' },
-{ id: 'basmati-rice', name: 'Basmati Rice (Cooked)', calories: 121, protein: 3.5, carbs: 26, fats: 0.4, serving: '100g' },
+{ id: 'basmati-rice', name: '100gm Basmati Rice', calories: 121, protein: 3.5, carbs: 26, fats: 0.4, serving: '100g' },
 
 // --- More Global & Local Restaurant Icons ---
 { id: 'mcdonalds-nuggets', name: 'McDonald\'s Chicken McNuggets', calories: 420, protein: 24, carbs: 25, fats: 25, serving: '9 pieces' },
@@ -284,8 +284,7 @@ const FOOD_DATABASE = [
 
 // --- Healthy Proteins, Grains & Snacks ---
 { id: 'cottage-cheese', name: 'Cottage Cheese / Jebna Quraish', calories: 98, protein: 11, carbs: 3.4, fats: 4.3, serving: '100g' },
-{ id: 'brown-rice', name: 'Brown Rice (Cooked)', calories: 112, protein: 2.6, carbs: 23.5, fats: 0.9, serving: '100g' },
-{ id: 'quinoa', name: 'Quinoa (Cooked)', calories: 120, protein: 4.4, carbs: 21.3, fats: 1.9, serving: '100g' },
+{ id: 'brown-rice', name: '100gm Brown Rice ', calories: 112, protein: 2.6, carbs: 23.5, fats: 0.9, serving: '100g' },
 { id: 'peanut-butter', name: 'Peanut Butter (Natural)', calories: 588, protein: 25, carbs: 20, fats: 50, serving: '100g' },
 { id: 'boiled-potato', name: 'Boiled Potato (Without Skin)', calories: 87, protein: 1.9, carbs: 20.1, fats: 0.1, serving: '100g' },
 
@@ -358,7 +357,7 @@ const FOOD_DATABASE = [
 { id: 'halawa-plain',      name: 'Egyptian Halawa (Plain)',     calories: 512, protein: 12,  carbs: 53,   fats: 28,   serving: '100g' },
 { id: 'halawa-spread',     name: 'Halawa Spread (El Rashidi)',  calories: 495, protein: 10.5,carbs: 56,   fats: 25.5, serving: '100g' },
 { id: 'clotted-cream',     name: 'Egyptian Eshta (Baladi)',     calories: 345, protein: 2,   carbs: 2.8,  fats: 37,   serving: '100g' },
-{ id: 'honey-white',       name: 'Pure White Honey',            calories: 304, protein: 0.3, carbs: 82.4, fats: 0,    serving: '100g' },
+{ id: 'honey-white',       name: '1 spoon Honey',            calories: 304, protein: 0.3, carbs: 82.4, fats: 0,    serving: '100g' },
 { id: 'molasses-black',    name: 'Egyptian Black Honey (Asal)', calories: 290, protein: 0,   carbs: 75,   fats: 0,    serving: '100g' },// --- Egyptian & International Cheeses ---
 { id: 'rumi-cheese',       name: 'Egyptian Rumi Cheese (Old)',  calories: 390, protein: 26,   carbs: 2,    fats: 31,   serving: '100g' },
 { id: 'domiaty-cheese',    name: 'Domiaty White Cheese (Feta)', calories: 250, protein: 14,   carbs: 4,    fats: 20,   serving: '100g' },
@@ -421,10 +420,10 @@ const FOOD_DATABASE = [
 { id: 'bone-broth', name: 'Beef Bone Broth (Protein Rich)', calories: 45, protein: 10, carbs: 0, fats: 0.5, serving: '1 cup (240ml)' },
 { id: 'zero-sugar-soda', name: 'Zero Sugar Cola', calories: 0, protein: 0, carbs: 0, fats: 0, serving: '1 can (330ml)' },
 { id: 'caffeine-pills', name: 'Caffeine Tablet (200mg)', calories: 0, protein: 0, carbs: 0, fats: 0, serving: '1 tablet' },// ─── New Additions ────────────────────────────────────────────────────────
-{ id: 'almond-milk', name: 'Unsweetened Almond Milk', calories: 17, protein: 0.6, carbs: 0.8, fats: 1.5, serving: '100ml' },
+{ id: 'almond-milk', name: 'cup of Almond Milk', calories: 17, protein: 0.6, carbs: 0.8, fats: 1.5, serving: '100ml' },
 { id: 'oat-milk', name: 'Oat Milk (Barista)', calories: 54, protein: 1.0, carbs: 8.0, fats: 1.8, serving: '100ml' },
 { id: 'lean-beef-mince', name: 'Lean Beef Mince (5% fat)', calories: 151, protein: 21.5, carbs: 0, fats: 6.8, serving: '100g' },
-{ id: 'chicken-thigh', name: 'Boneless Skinless Chicken Thigh', calories: 177, protein: 20.0, carbs: 0, fats: 10.3, serving: '100g' },
+{ id: 'chicken-thigh', name: 'Chicken Thigh', calories: 177, protein: 20.0, carbs: 0, fats: 10.3, serving: '100g' },
 { id: 'firm-tofu', name: 'Firm Tofu', calories: 144, protein: 15.8, carbs: 2.5, fats: 8.0, serving: '100g' },
 { id: 'hummus', name: 'Classic Hummus', calories: 166, protein: 4.9, carbs: 14.3, fats: 10.5, serving: '100g' },
 { id: 'tahini', name: 'Tahini (Sesame Paste)', calories: 595, protein: 17.0, carbs: 21.0, fats: 53.0, serving: '100g' },
@@ -439,6 +438,41 @@ const FOOD_DATABASE = [
 { id: 'greek-yogurt-fat-free', name: 'Greek Yogurt (0% Fat)', calories: 59, protein: 10.0, carbs: 3.6, fats: 0.2, serving: '100g' },
 { id: 'whole-egg', name: 'Whole Egg (Large)', calories: 78, protein: 6.3, carbs: 0.6, fats: 5.3, serving: '1 large' },
 { id: 'egg-whites', name: 'Liquid Egg Whites', calories: 52, protein: 11.0, carbs: 0, fats: 0, serving: '100g' },
+{ id: 'gebna-beyda', name: 'Gebna Beyda (White Cheese / Domiati)', calories: 240, protein: 14.0, carbs: 2.5, fats: 19.0, serving: '100g' },
+{ id: 'fino-bread', name: 'Eish Fino (Egyptian White Roll)', calories: 310, protein: 11.0, carbs: 55.0, fats: 5.0, serving: '100g' },{ id: 'whey-isolate', name: 'Whey Protein Isolate', calories: 110, protein: 26, carbs: 0.5, fats: 0, serving: '1 scoop (~30g)' },
+{ id: 'mass-gainer-powder', name: 'Mass Gainer Powder', calories: 380, protein: 25, carbs: 65, fats: 3, serving: '100g' },
+{ id: 'eaa-powder', name: 'EAA (Essential Amino Acids) Powder', calories: 0, protein: 0, carbs: 0, fats: 0, serving: '1 scoop' },
+{ id: 'beta-alanine', name: 'Beta-Alanine Powder', calories: 0, protein: 0, carbs: 0, fats: 0, serving: '1 scoop (3g)' },
+{ id: 'citrulline-malate', name: 'Citrulline Malate Powder', calories: 0, protein: 0, carbs: 0, fats: 0, serving: '1 scoop (5g)' },
+{ id: 'l-carnitine-liquid', name: 'L-Carnitine Liquid', calories: 0, protein: 0, carbs: 0, fats: 0, serving: '1 tbsp (15ml)' },
+{ id: 'ashwagandha-capsules', name: 'Ashwagandha Extract', calories: 0, protein: 0, carbs: 0, fats: 0, serving: '1 capsule' },
+{ id: 'vitamin-d3-k2', name: 'Vitamin D3 + K2 Supplement', calories: 0, protein: 0, carbs: 0, fats: 0, serving: '1 capsule' },
+{ id: 'zma-supplement', name: 'ZMA (Zinc, Magnesium, B6)', calories: 0, protein: 0, carbs: 0, fats: 0, serving: '3 capsules' },
+{ id: 'psyllium-husk-powder', name: 'Psyllium Husk Powder (Fiber)', calories: 30, protein: 0, carbs: 8, fats: 0, serving: '1 tbsp (9g)' },
+{ id: 'celsius-energy-drink', name: 'Celsius / C4 Fit Energy Drink', calories: 10, protein: 0, carbs: 0, fats: 0, serving: '1 can (355ml)' },
+// --- Crepe Variations ---
+{ id: 'crepe-crunchy-chicken', name: 'Egyptian Chicken Crunchy Crepe (Koki/Strips)', calories: 680, protein: 28, carbs: 75, fats: 26, serving: '1 crepe' },
+{ id: 'crepe-chicken-shawarma', name: 'Chicken Shawarma Crepe', calories: 620, protein: 32, carbs: 68, fats: 22, serving: '1 crepe' },
+{ id: 'crepe-shish-taouk', name: 'Shish Taouk Crepe', calories: 590, protein: 30, carbs: 67, fats: 19, serving: '1 crepe' },
+{ id: 'crepe-mix-chicken', name: 'Mix Chicken Crepe (Strips + Shawarma + Panne)', calories: 740, protein: 34, carbs: 76, fats: 30, serving: '1 crepe' },
+{ id: 'crepe-sogoq', name: 'Egyptian Sausage Crepe (Sogoq)', calories: 650, protein: 24, carbs: 66, fats: 29, serving: '1 crepe' },
+{ id: 'crepe-mix-meat', name: 'Mix Meat Crepe (Sogoq + Burger + Kofta)', calories: 790, protein: 31, carbs: 68, fats: 36, serving: '1 crepe' },
+{ id: 'crepe-mix-cheese', name: 'Mix Cheese Crepe (Rumi + Cheddar + Mozzarella)', calories: 580, protein: 22, carbs: 64, fats: 24, serving: '1 crepe' },
+{ id: 'crepe-french-fries', name: 'French Fries Crepe (Batates Regular)', calories: 510, protein: 11, carbs: 78, fats: 16, serving: '1 crepe' },
+{ id: 'crepe-nutella-banana', name: 'Sweet Crepe with Nutella & Banana', calories: 540, protein: 8, carbs: 82, fats: 20, serving: '1 crepe' },
+{ id: 'crepe-plain-sheet', name: 'Plain Crepe Sheet (No Fillings)', calories: 180, protein: 5, carbs: 32, fats: 3.2, serving: '1 sheet' },{ id: 'macarona-bechamel-chicken', name: 'Macarona Bechamel (with Chicken/Negresco)', calories: 158, protein: 8.5, carbs: 18.5, fats: 5.6, serving: '100g' },
+{ id: 'macarona-red-sauce-plain', name: 'Macarona bel Salssa (Pasta with Red Sauce - Plain)', calories: 120, protein: 3.5, carbs: 24, fats: 1.1, serving: '100g' },
+{ id: 'macarona-red-sauce-meat', name: 'Macarona bel Lahma Mofroma (Pasta with Red Sauce & Minced Meat)', calories: 148, protein: 7.8, carbs: 21, fats: 3.6, serving: '100g' },
+{ id: 'macarona-tagen-kebda', name: 'Tagen Macarona bel Kebda (Egyptian Pasta Baked with Liver)', calories: 155, protein: 9.5, carbs: 22, fats: 3.2, serving: '100g' },
+{ id: 'macarona-tagen-lahma', name: 'Tagen Macarona bel Lahma (Egyptian Pasta Baked with Meat)', calories: 162, protein: 9.0, carbs: 22.5, fats: 4.0, serving: '100g' },
+{ id: 'macarona-moubakkara-beef', name: 'Macarona Moubakkara (Libyan/Egyptian Bedouin One-Pot Pasta with Beef)', calories: 175, protein: 10.5, carbs: 19.5, fats: 6.2, serving: '100g' },
+{ id: 'pasta-white-sauce-plain', name: 'White Sauce Pasta (Plain Alfredo Style)', calories: 168, protein: 4.2, carbs: 21, fats: 7.5, serving: '100g' },
+{ id: 'pasta-white-sauce-chicken', name: 'White Sauce Pasta with Chicken', calories: 182, protein: 11.5, carbs: 18.2, fats: 7.0, serving: '100g' },
+{ id: 'pasta-pink-sauce', name: 'Pink Sauce Pasta (Rose Sauce)', calories: 145, protein: 3.8, carbs: 22, fats: 4.6, serving: '100g' },
+{ id: 'pasta-bolognese', name: 'Pasta Bolognese (Global Style)', calories: 132, protein: 6.8, carbs: 18.5, fats: 3.4, serving: '100g' },
+{ id: 'mac-and-cheese', name: 'Macaroni and Cheese (Classic Baked)', calories: 210, protein: 9.0, carbs: 24, fats: 8.5, serving: '100g' },
+{ id: 'tortilla', name: 'Flour Tortilla', calories: 144, protein: 4.0, carbs: 24, fats: 4.0, serving: '1 medium' },
+{ id: 'spaghetti', name: '100gm Macaroni/Spaghetti', calories: 220, protein: 8.1, carbs: 43, fats: 1.3, serving: '1 cup' },
 ];
 
 // ─── Diet Plan Blueprints ──────────────────────────────
@@ -589,57 +623,344 @@ function generateDailyDietPlan(targetCal, targetP, targetC, targetF) {
   return scaledPlan;
 }
 
-function generateWeeklyDietPlan() {
+async function generateDietPlanFromAI(targetCal, targetP, targetC, targetF, daysCount = 7) {
+  let data;
+  try {
+    const res = await fetch('/api/generate-diet', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        targetCal,
+        targetP,
+        targetC,
+        targetF,
+        days: daysCount
+      })
+    });
+
+    if (res.status === 404) {
+      throw new Error('404');
+    }
+
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+
+    data = await res.json();
+  } catch (err) {
+    if (err.message === '404' || err.message.includes('404')) {
+      console.warn('API endpoint not found (404). Falling back to direct Groq client-side request...');
+      toast('🔌 Local API missing. Fetching directly from Grok AI...');
+      
+const apiKey = GROK_API_KEY;
+           const prompt = `Create a 7-day healthy meal plan for someone eating exactly ${targetCal} kcal per day.
+
+FOOD SELECTION RULES :
+- Build the plan almost entirely around plain, everyday staple foods that ordinary people eat daily like these foods : chicken breasts or panne or chicken thighs and all chicken variations, eggs and its variations like ommlete and scrambled, oats and granola , white/basmati rice, bread (toast ,fino , tortilla , etc), potatoes and mashed potatoes and sweet potatos, pasta or macaroni variations, milk, yogurt or greek yoghurt, cheese variations, common fruit (banana, apple, orange, avocado like 1 - 2 times a week), common vegetables (broccoli, spinach, bamya, cucumber, salad), peanut butter, beans(only beans no green beans), nuts and cashew variations.
+- Chicken breast should be the DEFAULT protein for most lunches/dinners. Fish (salmon, tuna, etc.) may appear in AT MOST 1 meal across the entire plan - do not use fish repeatedly or as a frequent staple.
+- Red meat (beef, lamb ,steak ,etc) may appear occasionally (max 1-2 times across the whole plan), not as a daily staple.
+- Do NOT use rare, festive, restaurant-style, or heavy/greasy dishes (e.g.Om ali, quinao, koshary, shish taouk, feteer, mahshi, kunafa, fried foods, fast food, sugary desserts) - this is a clean everyday diet plan, not a treat/cheat plan.
+- Favor whole, minimally processed foods over processed ones. Avoid excessive added sugar, deep-fried items, and overly complex recipes.
+- Each day has 3-5 meals: breakfast, lunch, dinner, snack1 (3-5 times a week), snack2(optional (add it onlyyy 2 times a week)).but complete the kcal goal
+- Do NOT leave any day or meal empty except snack 2 as we said. Fully generate all 7 days.
+- Each meal should be represented by a short label and a list of food items with realistic quantities.
+- feel free to add supplements especially at snack meals and add diet related products and make the quantities logical for each food and avoid foods like (mixed vegetables or steamed vegetable) be more direct and clear.
+- feel free to add what you want to add (70% from the foods i suggested , 30% from foods you suggest).
+- Avoid adding (quinao) and (hummus) to lunch and tomatoes and carrots to snack because nobody eats them replace them you can replace quinao with whey protien scoop and replace tomatoes with nuts and cashew as snack meal to get fats.
+- Last thing make sure that friday ,saturday and sunday are complete because sometimes you generate them uncomplete
+
+**HIGHEST PRIORITY: CALORIE TARGET**
+- Every single day must total **close to ${targetCal} kcal** (minimum ${targetCal-200}, ideally ${targetCal}).
+- Use **generous, realistic portions** of rice, chicken, oats, pasta, potatoes, etc. to reach the target.
+- Do not make small/light meals. Make breakfast, lunch, and dinner filling.
+
+FOOD SELECTION RULES (strict):
+- Build the plan almost entirely around plain, everyday staple foods that ordinary people eat daily like these foods : chicken breasts or panne or chicken thighs and all chicken variations, eggs and its variations like ommlete and scrambled, oats and granola , white/basmati rice, bread (toast ,fino , tortilla , etc), potatoes and mashed potatoes and sweet potatos, pasta or macaroni variations, milk, yogurt or greek yoghurt, cheese variations, common fruit (banana, apple, orange, avocado like 1 - 2 times a week), common vegetables (broccoli, spinach, bamya, cucumber, salad), peanut butter, beans(only beans no green beans), nuts and cashew variations.
+- Chicken breast should be the DEFAULT protein for most lunches/dinners. Fish (salmon, tuna, etc.) may appear in AT MOST 1 meal across the entire plan.
+- Red meat may appear occasionally (max 1-2 times across the whole plan).
+- Do NOT use rare, festive, restaurant-style, or heavy/greasy dishes.
+- Each day has 3-5 meals: breakfast, lunch, dinner, snack1 (3-5 times a week), snack2 (optional, max 2 times a week).
+- Fully generate all 7 days with complete meals.
+
+**VERY STRICT FORMATTING RULES - NO MULTIPLIERS EVER:**
+
+- Rice, pasta, chicken, potatoes, broccoli, spinach → **always in grams** ("140 grams cooked white rice", "300 grams grilled chicken breast")
+- Milk → **always in cups** ("1 cup milk (2%)", "2 cups milk")
+- Honey, peanut butter, butter → **always in spoons** ("2 spoons natural peanut butter")
+- Bread → "2 slices fino bread"
+- Eggs → "2 medium eggs" or "4 medium eggs"
+- Banana, apple → "1 large banana", "2 medium apples"
+
+**Never** use "1x", "1.6x" or any multiplier.
+
+Return **ONLY** valid compact JSON matching this shape:
+
+{
+  "days": [
+    {
+      "day": "Monday",
+      "meals": {
+        "breakfast": {
+          "label": "Oatmeal Breakfast",
+          "items": ["150 grams cooked oats", "1 large banana", "30 grams whey protein", "1 cup milk (2%)"]
+        },
+        ...
+      }
+    }
+  ]
+}
+
+Make sure each day's total calories/macros roughly sum to the targets above at any cost even if the sunday will be  missing .`;
+
+
+      const clientRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: 'llama-3.3-70b-versatile',
+          messages: [{ role: 'user', content: prompt }],
+          temperature: 0.7,
+          max_tokens: 4096,
+          response_format: { type: "json_object" }
+        })
+      });
+
+      if (!clientRes.ok) {
+        const errText = await clientRes.text();
+        throw new Error(`Groq direct API error! status: ${clientRes.status}, detail: ${errText}`);
+      }
+
+      const clientData = await clientRes.json();
+      const rawText = clientData?.choices?.[0]?.message?.content || '';
+      const cleaned = rawText.replace(/```json|```/g, '').trim();
+      data = JSON.parse(cleaned);
+    } else {
+      throw err;
+    }
+  }
+
+  if (data.error) {
+    throw new Error(data.error);
+  }
+
+  return data.days.map((dayData) => {
+    const meals = {};
+    const mealKeys = ['breakfast', 'lunch', 'dinner', 'snack1', 'snack2'];
+    
+    // Step 1: Resolve foods and calculate raw base macros for each meal
+    const baseMeals = {};
+    let totalBaseCalories = 0;
+
+    mealKeys.forEach(key => {
+      const grokMeal = dayData.meals[key];
+      if (!grokMeal) {
+        baseMeals[key] = { label: 'Empty Meal', foods: [], macros: { calories: 0, protein: 0, carbs: 0, fats: 0 } };
+        return;
+      }
+
+      const foods = [];
+      let baseCalories = 0;
+      let baseProtein = 0;
+      let baseCarbs = 0;
+      let baseFats = 0;
+
+      const items = Array.isArray(grokMeal.items) ? grokMeal.items : [];
+      items.forEach(item => {
+        // Support both object format {name, quantity, calories, protein, carbs, fats} and plain string format
+        const itemName = typeof item === 'string' ? item : (item.name || '');
+        const itemQty = typeof item === 'string' ? 1 : (parseFloat(item.quantity) || 1);
+        const itemCalories = typeof item === 'string' ? null : (item.calories || null);
+        const itemProtein = typeof item === 'string' ? null : (item.protein || null);
+        const itemCarbs = typeof item === 'string' ? null : (item.carbs || null);
+        const itemFats = typeof item === 'string' ? null : (item.fats || null);
+
+        if (!itemName) return;
+
+        let dbFood = FOOD_DATABASE.find(f => f.name.toLowerCase() === itemName.toLowerCase() || f.id === itemName.toLowerCase().replace(/[^a-z0-9]+/g, '-'));
+        if (!dbFood) {
+          dbFood = FOOD_DATABASE.find(f => itemName.toLowerCase().includes(f.name.toLowerCase()) || f.name.toLowerCase().includes(itemName.toLowerCase()));
+        }
+
+        const qty = itemQty;
+        if (!dbFood) {
+          const customId = 'ai-' + itemName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+          dbFood = FOOD_DATABASE.find(f => f.id === customId);
+          if (!dbFood) {
+            dbFood = {
+              id: customId,
+              name: itemName,
+              calories: itemCalories !== null ? itemCalories : 100,
+              protein: itemProtein !== null ? itemProtein : 5,
+              carbs: itemCarbs !== null ? itemCarbs : 15,
+              fats: itemFats !== null ? itemFats : 2,
+              serving: '1 serving'
+            };
+            FOOD_DATABASE.push(dbFood);
+          }
+        }
+        foods.push(dbFood.id, qty);
+        
+        baseCalories += (dbFood.calories || 0) * qty;
+        baseProtein  += (dbFood.protein || 0) * qty;
+        baseCarbs    += (dbFood.carbs || 0) * qty;
+        baseFats     += (dbFood.fats || 0) * qty;
+      });
+
+      baseMeals[key] = {
+        label: grokMeal.label || key.charAt(0).toUpperCase() + key.slice(1),
+        foods: foods,
+        macros: {
+          calories: baseCalories,
+          protein: baseProtein,
+          carbs: baseCarbs,
+          fats: baseFats
+        }
+      };
+
+      totalBaseCalories += baseCalories;
+    });
+
+    // Step 2: Scale all quantities and macros to hit targetCal
+    const scaleFactor = totalBaseCalories > 0 ? targetCal / totalBaseCalories : 1;
+
+    mealKeys.forEach(key => {
+      const meal = baseMeals[key];
+      if (meal.foods.length === 0) {
+        meals[key] = meal;
+        return;
+      }
+
+      
+
+      // Scale quantities
+      const scaledFoods = [];
+      for (let i = 0; i < meal.foods.length; i += 2) {
+        const foodId = meal.foods[i];
+        const baseQty = meal.foods[i + 1];
+        scaledFoods.push(foodId, Math.max(0.1, Math.round(baseQty * scaleFactor * 10) / 10));
+      }
+
+      meals[key] = {
+        label: meal.label,
+        foods: meal.foods,
+        macros: meal.macros
+      };
+    });
+
+    const dayCal = Math.round(Object.values(meals).reduce((sum, m) => sum + (m.macros?.calories || 0), 0));
+    const dayP = Math.round(Object.values(meals).reduce((sum, m) => sum + (m.macros?.protein || 0), 0));
+    const dayC = Math.round(Object.values(meals).reduce((sum, m) => sum + (m.macros?.carbs || 0), 0));
+    const dayF = Math.round(Object.values(meals).reduce((sum, m) => sum + (m.macros?.fats || 0), 0));
+
+    return {
+      day: dayData.day,
+      meals,
+      target: { calories: dayCal, protein: dayP, carbs: dayC, fats: dayF }
+    };
+  });
+}
+
+async function generateWeeklyDietPlan() {
   const profile = DB.get('calculatorProfile', null);
   const goals = DB.get('calorieGoals', { calories: 2000, protein: 150, carbs: 200, fats: 55 });
 
   if (!profile) {
-    toast('⚠️ Please save your profile in the Calculator tab first.');
+    toast('⚠️ Please save your profile first.');
     navigate('calculator');
     return;
   }
 
   const targetCal = goals.calories || 2000;
-  const targetP = goals.protein || 150;
-  const targetC = goals.carbs || 200;
-  const targetF = goals.fats || 55;
 
-  // Generate 7 days
-  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-  const weekPlan = days.map((day, idx) => {
-    // Add slight variation each day (±5%)
-    const variation = 0.95 + (Math.random() * 0.1);
-    const dayCal = Math.round(targetCal * variation);
-    const dayP = Math.round(targetP * variation);
-    const dayC = Math.round(targetC * variation);
-    const dayF = Math.round(targetF * variation);
-    
-    const meals = generateDailyDietPlan(dayCal, dayP, dayC, dayF);
-    return { day, meals, target: { calories: dayCal, protein: dayP, carbs: dayC, fats: dayF } };
-  });
+  const genBtn = document.querySelector('#diet-modal .modal-body button[onclick*="generateWeeklyDietPlan"]');
+  if (genBtn) {
+    genBtn.disabled = true;
+    genBtn.innerHTML = '⏳ Generating...';
+  }
 
-  DB.set('weeklyDietPlan', weekPlan);
-  renderDietPage(weekPlan);
-  toast('📋 Weekly diet plan generated!');
-   if (getAuthUser()) {
-    setTimeout(() => syncUserDataToCloud(), 500);}
+  toast('🤖 Asking Grok for your diet plan...');
+
+  try {
+  let weekPlan = await generateDietPlanFromAI(targetCal, goals.protein || 150, goals.carbs || 200, goals.fats || 55, 7);
+
+    // Scale quantities (1.5x)
+    weekPlan = scaleUpDietPlan(weekPlan, targetCal);
+
+    DB.set('weeklyDietPlan', weekPlan);
+    renderDietPage(weekPlan);
+    toast('✅ Grok generated your diet plan!');
+  } catch (err) {
+    console.error(err);
+    toast('❌ Failed to generate plan', 'error');
+  } finally {
+    if (genBtn) {
+      genBtn.disabled = false;
+      genBtn.innerHTML = '🔄 Generate';
+    }
+  }
 }
 
+async function editMealText(mealKey, element) {
+  const currentText = element.textContent.trim();
+  const newText = prompt(`Edit ${mealKey} (natural language, e.g. "300g Chicken Breast + 2 cups Rice")`, currentText);
+  
+  if (newText === null || newText === currentText) return;
+
+  const plan = DB.get('weeklyDietPlan', null);
+  const dayIndex = state.editingDietDayIndex;
+  if (!plan || dayIndex == null) return;
+
+  const day = plan[dayIndex];
+  if (!day.meals[mealKey]) day.meals[mealKey] = { macros: {} };
+
+  try {
+    toast('🤖 Asking Grok to recalculate...');
+    
+    const res = await fetch('/api/recalc-meal', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items: [newText] })
+    });
+
+    if (!res.ok) throw new Error('Failed');
+
+    const result = await res.json();
+
+    day.meals[mealKey].foodText = newText;
+    day.meals[mealKey].macros = {
+      calories: Math.round(result.calories || 0),
+      protein: Math.round(result.protein || 0),
+      carbs: Math.round(result.carbs || 0),
+      fats: Math.round(result.fats || 0)
+    };
+
+    DB.set('weeklyDietPlan', plan);
+    renderDietPage(plan);           // refresh main view
+    renderDietDayEditModal();       // refresh edit modal if open
+    toast('✅ Updated!');
+  } catch (e) {
+    console.error(e);
+    toast('❌ Could not recalculate. Try again.', 'error');
+  }
+}
+window.editMealText = editMealText;
+
+
+// Updated renderDietPage - uses natural language
 function renderDietPage(plan) {
   const container = document.getElementById('weekly-diet-grid');
   const summary = document.getElementById('diet-profile-summary');
   if (!container) return;
 
-  // If no plan, load from DB
-  if (!plan) {
-    plan = DB.get('weeklyDietPlan', null);
-  }
+  if (!plan) plan = DB.get('weeklyDietPlan', null);
 
-  const profile = DB.get('calculatorProfile', null);
-  const goals = DB.get('calorieGoals', { calories: 2000, protein: 150, carbs: 200, fats: 55 });
-
-  // Update summary
+  // Summary (unchanged)
   if (summary) {
+    const profile = DB.get('calculatorProfile', null);
+    const goals = DB.get('calorieGoals', { calories: 2000, protein: 150, carbs: 200, fats: 55 });
     if (profile) {
       summary.innerHTML = `
         <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;">
@@ -649,88 +970,113 @@ function renderDietPage(plan) {
           <span style="font-size:13px;color:var(--accent);">
             ${JBIcons.svg('target', { size: 16 })} ${goals.calories} kcal · ${goals.protein}g P · ${goals.carbs}g C · ${goals.fats}g F
           </span>
-          <span style="font-size:12px;color:var(--text3);">${plan ? '<span class="ic ic-done"></span> Plan ready' : '<span class="ic ic-error"></span> No plan'}</span>
+          <span style="font-size:12px;color:var(--text3);">${plan ? '✅ Plan ready' : '❌ No plan'}</span>
         </div>
       `;
     } else {
-      summary.innerHTML = `<p class="muted-text">⚡ Go to <strong>Calculator</strong> to save your profile, then generate a diet plan.</p>`;
+      summary.innerHTML = `<p class="muted-text">Go to Calculator to set profile first.</p>`;
     }
   }
 
-  if (!plan || plan.length === 0) {
-    container.innerHTML = `
-      <div class="empty-state">
-        <span class="empty-icon">${JBIcons.svg('clipboard', { size: 32 })}</span>
-        <p>No diet plan yet. Tap <strong>Generate</strong> above.</p>
-      </div>
-    `;
+  if (!plan || !plan.length) {
+    container.innerHTML = `<div class="empty-state"><p>No diet plan yet. Tap Generate.</p></div>`;
     return;
   }
 
-  // Render each day
   container.innerHTML = plan.map((day, dayIdx) => {
-    const meals = day.meals;
+    const meals = day.meals || {};
     const mealKeys = ['breakfast', 'lunch', 'dinner', 'snack1', 'snack2'];
     const mealLabels = { breakfast: '🌅 Breakfast', lunch: '☀️ Lunch', dinner: '🌙 Dinner', snack1: '🍎 Snack 1', snack2: '🍌 Snack 2' };
-    const mealClasses = { breakfast: 'breakfast', lunch: 'lunch', dinner: 'dinner', snack1: 'snack', snack2: 'snack' };
 
     const mealBlocks = mealKeys.map(key => {
       const meal = meals[key];
       if (!meal) return '';
-      
-      // Build food name string
-      const foodNames = [];
-      for (let i = 0; i < meal.foods.length; i += 2) {
-        const id = meal.foods[i];
-        const qty = meal.foods[i + 1];
-        const dbFood = FOOD_DATABASE.find(f => f.id === id);
-        if (dbFood) {
-          const serving = dbFood.serving || 'serving';
-          foodNames.push(`${qty}× ${dbFood.name}`);
-        }
+
+      // NEW: Use natural language text if available
+      let foodText = meal.foodText;
+      if (!foodText) {
+        // Fallback for old plans
+        foodText = Array.isArray(meal.items) ? meal.items.join(' + ') : 'No foods listed';
       }
 
       const m = meal.macros || { calories: 0, protein: 0, carbs: 0, fats: 0 };
+
       return `
-        <div class="meal-block ${mealClasses[key]}">
+        <div class="meal-block ${key}">
           <span class="meal-label">${mealLabels[key]}</span>
-          <span class="meal-foods">
-            ${foodNames.map(name => `<span class="food-item">${name}</span>`).join('')}
-          </span>
+          <span class="meal-foods" ondblclick="editMealText('${key}', this)" style="cursor:text;font-weight:500;">${foodText}</span>
           <span class="meal-macros">${m.calories} kcal · ${m.protein}g P · ${m.carbs}g C · ${m.fats}g F</span>
         </div>
       `;
     }).join('');
 
-    // Calculate day totals
-    const dayTotal = { calories: 0, protein: 0, carbs: 0, fats: 0 };
-    mealKeys.forEach(key => {
-      const m = meals[key]?.macros || {};
-      dayTotal.calories += m.calories || 0;
-      dayTotal.protein  += m.protein || 0;
-      dayTotal.carbs    += m.carbs || 0;
-      dayTotal.fats     += m.fats || 0;
-    });
+    const dayTotal = getDietDayTotals(meals);
 
     return `
       <div class="day-diet-card">
         <div class="day-diet-header">
           <span class="day-diet-title">${day.day}</span>
           <span class="day-diet-macros">
-            🔥 ${Math.round(dayTotal.calories)} kcal ·
-            💪 ${Math.round(dayTotal.protein)}g ·
-            🍚 ${Math.round(dayTotal.carbs)}g ·
+            🔥 ${Math.round(dayTotal.calories)} kcal · 
+            💪 ${Math.round(dayTotal.protein)}g · 
+            🍚 ${Math.round(dayTotal.carbs)}g · 
             🧈 ${Math.round(dayTotal.fats)}g
           </span>
         </div>
         ${mealBlocks}
         <div class="day-diet-actions">
           <button class="btn btn-sm btn-primary" onclick="addDayToLog(${dayIdx})">➕ Add to Today</button>
-          <button class="btn btn-sm btn-ghost" onclick="editDietDay(${dayIdx})">${JBIcons.svg('pencil', { size: 13 })} Edit Day</button>
+          <button class="btn btn-sm btn-ghost" onclick="editDietDay(${dayIdx})">✏️ Edit</button>
         </div>
       </div>
     `;
   }).join('');
+}
+
+
+
+function scaleUpDietPlan(weekPlan, targetCal) {
+  if (!weekPlan || !weekPlan.length) return weekPlan;
+
+  return weekPlan.map(day => {
+    const meals = day.meals || {};
+    let dayTotal = 0;
+
+    Object.keys(meals).forEach(key => {
+      const meal = meals[key];
+      if (meal && meal.macros) {
+        dayTotal += meal.macros.calories || 0;
+      }
+    });
+
+    if (dayTotal < targetCal * 0.8 && dayTotal > 0) {
+      const scaleFactor = Math.max(1.5, targetCal / dayTotal);
+
+      Object.keys(meals).forEach(key => {
+        const meal = meals[key];
+        if (!meal) return;
+
+        if (meal.macros) {
+          meal.macros.calories = Math.round(meal.macros.calories * scaleFactor);
+          meal.macros.protein = Math.round(meal.macros.protein * scaleFactor * 10) / 10;
+          meal.macros.carbs   = Math.round(meal.macros.carbs * scaleFactor * 10) / 10;
+          meal.macros.fats    = Math.round(meal.macros.fats * scaleFactor * 10) / 10;
+        }
+
+        if (Array.isArray(meal.items)) {
+          meal.items = meal.items.map(item => {
+            return item.replace(/(\d+)\s*(grams?|g|cup|cups?|spoon|spoons?|slice|slices?)/gi, 
+              (match, num, unit) => {
+                const newNum = Math.round(parseInt(num) * scaleFactor);
+                return newNum + ' ' + unit;
+              });
+          });
+        }
+      });
+    }
+
+    return day;
+  });
 }
 
 function addDayToLog(dayIndex) {
@@ -775,7 +1121,7 @@ function addDayToLog(dayIndex) {
   if (getAuthUser()) syncUserDataToCloud();
 }
 
-function regenerateDay(dayIndex) {
+async function regenerateDay(dayIndex) {
   const plan = DB.get('weeklyDietPlan', null);
   if (!plan || !plan[dayIndex]) return;
 
@@ -794,19 +1140,30 @@ function regenerateDay(dayIndex) {
   const dayC = Math.round(targetC * variation);
   const dayF = Math.round(targetF * variation);
 
-  const newMeals = generateDailyDietPlan(dayCal, dayP, dayC, dayF);
-  plan[dayIndex].meals = newMeals;
-  plan[dayIndex].target = { calories: dayCal, protein: dayP, carbs: dayC, fats: dayF };
-  
-  DB.set('weeklyDietPlan', plan);
-  renderDietPage(plan);
-  toast(`🔄 Regenerated ${plan[dayIndex].day}`);
+  toast('🔌 Connecting to Grok AI...');
 
- if (getAuthUser()) {
-    setTimeout(() => syncUserDataToCloud(), 300);
+  try {
+    const dailyPlans = await generateDietPlanFromAI(dayCal, dayP, dayC, dayF, 1);
+    if (dailyPlans && dailyPlans[0]) {
+      plan[dayIndex].meals = dailyPlans[0].meals;
+      plan[dayIndex].target = dailyPlans[0].target;
+      
+      DB.set('weeklyDietPlan', plan);
+      renderDietPage(plan);
+      toast(`✅ Connected! Grok regenerated ${plan[dayIndex].day}`);
+      if (getAuthUser()) {
+        setTimeout(() => syncUserDataToCloud(), 300);
+      }
+    } else {
+      throw new Error('No plan returned from AI');
+    }
+  } catch (err) {
+    console.error('[Regenerate Day Error]', err);
+    toast('❌ Groq connection failed: ' + err.message);
   }
-
 }
+
+// New: Edit meal as free text → Grok recalculates
 
 function getAllFoods() {
   return [...FOOD_DATABASE, ...(getData().customFoods || [])];
@@ -1000,7 +1357,7 @@ function addFoodToDietMeal(foodId) {
   toast(`Added ${dbFood.name}`);
 }
 
-function regenerateEditingDietDay() {
+async function regenerateEditingDietDay() {
   const dayIndex = state.editingDietDayIndex;
   const plan = DB.get('weeklyDietPlan', null);
   if (dayIndex == null || !plan || !plan[dayIndex]) return;
@@ -1019,11 +1376,24 @@ function regenerateEditingDietDay() {
   const dayC = Math.round(targetC * variation);
   const dayF = Math.round(targetF * variation);
 
-  plan[dayIndex].meals = generateDailyDietPlan(dayCal, dayP, dayC, dayF);
-  plan[dayIndex].target = { calories: dayCal, protein: dayP, carbs: dayC, fats: dayF };
-  DB.set('weeklyDietPlan', plan);
-  renderDietDayEditModal();
-  toast(`🔄 Regenerated ${plan[dayIndex].day}`);
+  toast('🔌 Connecting to Grok AI...');
+
+  try {
+    const dailyPlans = await generateDietPlanFromAI(dayCal, dayP, dayC, dayF, 1);
+    if (dailyPlans && dailyPlans[0]) {
+      plan[dayIndex].meals = dailyPlans[0].meals;
+      plan[dayIndex].target = dailyPlans[0].target;
+      
+      DB.set('weeklyDietPlan', plan);
+      renderDietDayEditModal();
+      toast(`✅ Connected! Grok regenerated ${plan[dayIndex].day}`);
+    } else {
+      throw new Error('No plan returned from AI');
+    }
+  } catch (err) {
+    console.error('[Regenerate Day Error]', err);
+    toast('❌ Groq connection failed: ' + err.message);
+  }
 }
 
 function saveDietDayEdit() {
@@ -2629,7 +2999,9 @@ function openScheduledSessionModal(exercise) {
       <div class="session-progress-bar" style="width: ${(current/total)*100}%"></div>
       <div class="session-progress-text">Exercise ${current} of ${total}</div>
     </div>
-    <div class="session-exercise-title">${escHtml(exercise.name)}</div>
+    <div class="session-exercise-title">
+      <span>${escHtml(exercise.name)}</span>
+    </div>
     ${isCardio ? renderCardioSessionInputs(exercise) : renderStrengthSessionInputs(exercise, sets)}
     ${restTimerMarkup()}
   `;
@@ -3685,13 +4057,54 @@ function openSessionModal(exercise) {
   const isCardio = exercise.isCardio;
 
   body.innerHTML = `
-    <div class="session-exercise-title">${escHtml(exercise.name)}</div>
+    <div class="session-exercise-title">
+      <span>${escHtml(exercise.name)}</span>
+    </div>
     ${isCardio ? renderCardioSessionInputs(exercise) : renderStrengthSessionInputs(exercise, sets)}
     ${restTimerMarkup()}
   `;
 
   openModal('session-modal');
 }
+
+// ─── Add an extra set row to the currently open session/queue modal ──────
+// This only affects the current logging session — it does NOT change the
+// exercise's stored `sets` count in the workout library or custom workouts.
+function addSessionSetRow() {
+  const container = document.getElementById('session-modal-body');
+  if (!container) return;
+  const rows = container.querySelectorAll('.set-row[id^="set-row-"]');
+  const nextIndex = rows.length;
+  const exercise = state.activeSession?.exercise;
+  if (!exercise) return;
+
+  const isQueued = !!state.activeSession.isQueued;
+  const placeholder = (exercise.id === 'push-up' || exercise.id === 'pull-up') ? 'BW' : '0';
+  const repsPlaceholder = exercise.reps || 10;
+  const checkHandler = isQueued
+    ? `toggleQueuedSetCheck(${nextIndex})`
+    : `toggleSetCheck(${nextIndex}, ${exercise.rest || 60})`;
+
+  const rowHtml = `
+    <div class="set-row" id="set-row-${nextIndex}">
+      <div class="set-num" id="set-num-${nextIndex}">${nextIndex + 1}</div>
+      <input class="set-input" type="number" inputmode="decimal" pattern="[0-9]*" id="set-weight-${nextIndex}" placeholder="${placeholder}" step="0.5" />
+      <input class="set-input" type="number" inputmode="numeric" pattern="[0-9]*" id="set-reps-${nextIndex}" placeholder="${repsPlaceholder}" />
+      <div class="set-check" id="set-check-${nextIndex}" onclick="${checkHandler}"></div>
+    </div>`;
+
+  if (rows.length) {
+    rows[rows.length - 1].insertAdjacentHTML('afterend', rowHtml);
+  } else {
+    const labels = container.querySelector('.set-labels');
+    if (labels) labels.insertAdjacentHTML('afterend', rowHtml);
+    else container.insertAdjacentHTML('afterbegin', rowHtml);
+  }
+
+  if (typeof SoundManager !== 'undefined') SoundManager.tap();
+  toast('Set added ➕');
+}
+window.addSessionSetRow = addSessionSetRow;
 
 function buildProgressiveOverloadTip(exercise) {
   if (!exercise || exercise.isCardio) return '';
@@ -3729,6 +4142,9 @@ function buildProgressiveOverloadTip(exercise) {
 function renderStrengthSessionInputs(exercise, sets) {
   const isLb = state.weightUnit === 'lb';
   return `
+    <div style="display:flex;justify-content:center;margin:6px 0 4px;">
+      <button class="btn btn-sm add-set-btn" onclick="addSessionSetRow()" style="width:30%;">+ Add Set</button>
+    </div>
     <div class="set-labels">
       <span>Set</span>
       <span style="display:flex;align-items:center;gap:6px;justify-content:center">
@@ -3814,7 +4230,8 @@ function toggleSetCheck(i, rest) {
 }
 
 function checkAllSets(totalSets, rest) {
-  for (let i = 0; i < totalSets; i++) {
+  const rowCount = document.querySelectorAll('#session-modal-body .set-row[id^="set-row-"]').length || totalSets;
+  for (let i = 0; i < rowCount; i++) {
     const check = document.getElementById('set-check-' + i);
     const num   = document.getElementById('set-num-' + i);
     if (check && !check.classList.contains('checked')) {
@@ -3827,7 +4244,8 @@ function checkAllSets(totalSets, rest) {
 }
 
 function checkAllQueuedSets(totalSets) {
-  for (let i = 0; i < totalSets; i++) {
+  const rowCount = document.querySelectorAll('#session-modal-body .set-row[id^="set-row-"]').length || totalSets;
+  for (let i = 0; i < rowCount; i++) {
     const check = document.getElementById('set-check-' + i);
     const num   = document.getElementById('set-num-' + i);
     if (check && !check.classList.contains('checked')) {
@@ -4081,7 +4499,7 @@ function saveSession() {
     renderCalorieTracker();
     _debouncedSyncToCloud();
   } else {
-    const sets = ex.sets || 3;
+    const sets = document.querySelectorAll('#session-modal-body .set-row[id^="set-row-"]').length || (ex.sets || 3);
     const loggedSets = [];
     let maxWeight = 0;
     const LB_TO_KG_S = 0.453592;
@@ -5553,6 +5971,9 @@ function openQueueExerciseModal(queueIndex) {
     const isLb = state.weightUnit === 'lb';
     const KG_TO_LB = 2.20462;
     setsHtml = `
+      <div style="display:flex;justify-content:center;margin:6px 0 4px;">
+        <button class="btn btn-sm add-set-btn" onclick="addSessionSetRow()" style="width:30%;">+ Add Set</button>
+      </div>
       <div class="set-labels">
         <span>Set</span>
         <span style="display:flex;align-items:center;gap:6px;justify-content:center">
@@ -5606,7 +6027,9 @@ function openQueueExerciseModal(queueIndex) {
   }
   
   body.innerHTML = `
-    <div class="session-exercise-title">${escHtml(exercise.name)}</div>
+    <div class="session-exercise-title">
+      <span>${escHtml(exercise.name)}</span>
+    </div>
     ${setsHtml}
     ${!isCardio ? buildProgressiveOverloadTip(exercise) : ''}
     ${restTimerMarkup()}
@@ -5650,7 +6073,7 @@ function saveQueuedExercise() {
     toast(`✅ Saved ${exercise.name}: ${duration} minutes`);
     
   } else {
-    const sets = exercise.sets || 3;
+    const sets = document.querySelectorAll('#session-modal-body .set-row[id^="set-row-"]').length || (exercise.sets || 3);
     const loggedSets = [];
     let maxWeight = 0;
     let allCompleted = true;
