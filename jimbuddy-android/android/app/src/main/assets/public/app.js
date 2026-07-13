@@ -495,32 +495,56 @@ function getBlueprintMacros(blueprint) {
 }
 
 function generateDailyDietPlan(targetCal, targetP, targetC, targetF) {
-  // Allow ±15% flexibility
-  const margin = 0.15;
-  
-  // Shuffle arrays for variety
-  function shuffle(arr) {
-    const a = [...arr];
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
+  // Calculate target macro ratios
+  const targetRatioP = targetCal > 0 ? (targetP * 4) / targetCal : 0.30; // protein is 4 kcal/g
+  const targetRatioC = targetCal > 0 ? (targetC * 4) / targetCal : 0.45; // carbs is 4 kcal/g
+  const targetRatioF = targetCal > 0 ? (targetF * 9) / targetCal : 0.25; // fats is 9 kcal/g
+
+  // Helper to score a blueprint based on macro ratio similarity
+  function scoreBlueprint(bp) {
+    const macros = getBlueprintMacros(bp);
+    if (macros.calories === 0) return 999;
+    
+    const bpRatioP = (macros.protein * 4) / macros.calories;
+    const bpRatioC = (macros.carbs * 4) / macros.calories;
+    const bpRatioF = (macros.fats * 9) / macros.calories;
+    
+    // Sum of squared errors to penalize large deviations
+    return Math.pow(bpRatioP - targetRatioP, 2) + 
+           Math.pow(bpRatioC - targetRatioC, 2) + 
+           Math.pow(bpRatioF - targetRatioF, 2);
   }
 
-  const mealTypes = ['breakfast', 'lunch', 'dinner'];
-  const snackBlueprints = shuffle(MEAL_BLUEPRINTS.snack);
-  
-  // Pick one random blueprint for each main meal
+  // Get ranked list of blueprints for each meal type
+  function getRankedBlueprints(category) {
+    const list = MEAL_BLUEPRINTS[category] || [];
+    return list.map(bp => ({
+      bp,
+      score: scoreBlueprint(bp)
+    })).sort((a, b) => a.score - b.score);
+  }
+
+  const breakfastRanked = getRankedBlueprints('breakfast');
+  const lunchRanked = getRankedBlueprints('lunch');
+  const dinnerRanked = getRankedBlueprints('dinner');
+  const snackRanked = getRankedBlueprints('snack');
+
+  // To introduce variety but still prioritize good matches, we randomly pick from the top 3 matches
+  function pickMeal(rankedList) {
+    const topCandidates = rankedList.slice(0, 3);
+    const idx = Math.floor(Math.random() * topCandidates.length);
+    return topCandidates[idx]?.bp;
+  }
+
   const selected = {
-    breakfast: shuffle(MEAL_BLUEPRINTS.breakfast)[0],
-    lunch: shuffle(MEAL_BLUEPRINTS.lunch)[0],
-    dinner: shuffle(MEAL_BLUEPRINTS.dinner)[0],
-    snack1: snackBlueprints[0] || MEAL_BLUEPRINTS.snack[0],
-    snack2: snackBlueprints[1] || MEAL_BLUEPRINTS.snack[0],
+    breakfast: pickMeal(breakfastRanked) || MEAL_BLUEPRINTS.breakfast[0],
+    lunch: pickMeal(lunchRanked) || MEAL_BLUEPRINTS.lunch[0],
+    dinner: pickMeal(dinnerRanked) || MEAL_BLUEPRINTS.dinner[0],
+    snack1: snackRanked[0]?.bp || MEAL_BLUEPRINTS.snack[0],
+    snack2: snackRanked[1]?.bp || MEAL_BLUEPRINTS.snack[1] || MEAL_BLUEPRINTS.snack[0]
   };
 
-  // Calculate total macros of the base plan
+  // Calculate total macros of the selected plan
   let total = { calories: 0, protein: 0, carbs: 0, fats: 0 };
   const mealKeys = ['breakfast', 'lunch', 'dinner', 'snack1', 'snack2'];
   const planMacros = {};
@@ -536,7 +560,7 @@ function generateDailyDietPlan(targetCal, targetP, targetC, targetF) {
   });
 
   // Scale all meals proportionally to hit the calorie target
-  const scaleFactor = targetCal / total.calories;
+  const scaleFactor = total.calories > 0 ? targetCal / total.calories : 1;
   
   // Apply scaling to each meal's blueprint
   const scaledPlan = {};
@@ -562,8 +586,6 @@ function generateDailyDietPlan(targetCal, targetP, targetC, targetF) {
     };
   });
 
-  // Adjust slightly to match protein/fat/carb targets if possible (simplified)
-  // We'll rely on the fact that the blueprints are balanced.
   return scaledPlan;
 }
 
@@ -1419,6 +1441,15 @@ function openExerciseViewModal(exerciseId) {
     placeholder.style.display = 'flex';
     placeholder.innerHTML = '<span>🏋️</span><p>No preview available</p>';
     stopAnimationViewer();
+  }
+
+  // Set Add to Queue button click handler
+  const addBtn = document.getElementById('evm-add-queue-btn');
+  if (addBtn) {
+    addBtn.onclick = () => {
+      addToWorkoutQueue(ex.id, ex.name);
+      closeExerciseViewModal();
+    };
   }
 
   openModal('exercise-view-modal');
@@ -2598,7 +2629,10 @@ function openScheduledSessionModal(exercise) {
       <div class="session-progress-bar" style="width: ${(current/total)*100}%"></div>
       <div class="session-progress-text">Exercise ${current} of ${total}</div>
     </div>
-    <div class="session-exercise-title">${escHtml(exercise.name)}</div>
+    <div class="session-exercise-title" style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+      <span>${escHtml(exercise.name)}</span>
+      ${!isCardio ? `<button class="btn btn-sm btn-ghost" onclick="addSessionSetRow()" style="padding:4px 10px;font-size:12px;flex-shrink:0;">+ Set</button>` : ''}
+    </div>
     ${isCardio ? renderCardioSessionInputs(exercise) : renderStrengthSessionInputs(exercise, sets)}
     ${restTimerMarkup()}
   `;
@@ -3654,13 +3688,83 @@ function openSessionModal(exercise) {
   const isCardio = exercise.isCardio;
 
   body.innerHTML = `
-    <div class="session-exercise-title">${escHtml(exercise.name)}</div>
+    <div class="session-exercise-title" style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+      <span>${escHtml(exercise.name)}</span>
+      ${!isCardio ? `<button class="btn btn-sm btn-ghost" onclick="addSessionSetRow()" style="padding:4px 10px;font-size:12px;flex-shrink:0;">+ Set</button>` : ''}
+    </div>
     ${isCardio ? renderCardioSessionInputs(exercise) : renderStrengthSessionInputs(exercise, sets)}
     ${restTimerMarkup()}
   `;
 
   openModal('session-modal');
 }
+
+// ─── Add an extra set row to the currently open session/queue modal ──────
+// This only affects the current logging session — it does NOT change the
+// exercise's stored `sets` count in the workout library or custom workouts.
+// Add a set directly to a specific exercise in the queue (without opening modal)
+function addQueueSetDirect(queueIdx) {
+  const exercise = workoutQueue[queueIdx];
+  if (!exercise) return;
+  
+  if (!exercise.loggedSets) {
+    exercise.loggedSets = [];
+  }
+  
+  // Determine next set number
+  const nextSetNum = exercise.loggedSets.length + 1;
+  
+  // Add a new empty set
+  exercise.loggedSets.push({
+    weight: 0,
+    reps: exercise.reps || 10,
+    done: false
+  });
+  
+  // Update the set count to include the new set
+  exercise.sets = Math.max(exercise.sets || 3, exercise.loggedSets.length);
+  
+  saveWorkoutQueue();
+  toast(`Set ${nextSetNum} added ➕`);
+  if (typeof SoundManager !== 'undefined') SoundManager.tap();
+}
+window.addQueueSetDirect = addQueueSetDirect;
+
+function addSessionSetRow() {
+  const container = document.getElementById('session-modal-body');
+  if (!container) return;
+  const rows = container.querySelectorAll('.set-row[id^="set-row-"]');
+  const nextIndex = rows.length;
+  const exercise = state.activeSession?.exercise;
+  if (!exercise) return;
+
+  const isQueued = !!state.activeSession.isQueued;
+  const placeholder = (exercise.id === 'push-up' || exercise.id === 'pull-up') ? 'BW' : '0';
+  const repsPlaceholder = exercise.reps || 10;
+  const checkHandler = isQueued
+    ? `toggleQueuedSetCheck(${nextIndex})`
+    : `toggleSetCheck(${nextIndex}, ${exercise.rest || 60})`;
+
+  const rowHtml = `
+    <div class="set-row" id="set-row-${nextIndex}">
+      <div class="set-num" id="set-num-${nextIndex}">${nextIndex + 1}</div>
+      <input class="set-input" type="number" inputmode="decimal" pattern="[0-9]*" id="set-weight-${nextIndex}" placeholder="${placeholder}" step="0.5" />
+      <input class="set-input" type="number" inputmode="numeric" pattern="[0-9]*" id="set-reps-${nextIndex}" placeholder="${repsPlaceholder}" />
+      <div class="set-check" id="set-check-${nextIndex}" onclick="${checkHandler}"></div>
+    </div>`;
+
+  if (rows.length) {
+    rows[rows.length - 1].insertAdjacentHTML('afterend', rowHtml);
+  } else {
+    const labels = container.querySelector('.set-labels');
+    if (labels) labels.insertAdjacentHTML('afterend', rowHtml);
+    else container.insertAdjacentHTML('afterbegin', rowHtml);
+  }
+
+  if (typeof SoundManager !== 'undefined') SoundManager.tap();
+  toast('Set added ➕');
+}
+window.addSessionSetRow = addSessionSetRow;
 
 function buildProgressiveOverloadTip(exercise) {
   if (!exercise || exercise.isCardio) return '';
@@ -3783,7 +3887,8 @@ function toggleSetCheck(i, rest) {
 }
 
 function checkAllSets(totalSets, rest) {
-  for (let i = 0; i < totalSets; i++) {
+  const rowCount = document.querySelectorAll('#session-modal-body .set-row[id^="set-row-"]').length || totalSets;
+  for (let i = 0; i < rowCount; i++) {
     const check = document.getElementById('set-check-' + i);
     const num   = document.getElementById('set-num-' + i);
     if (check && !check.classList.contains('checked')) {
@@ -3796,7 +3901,8 @@ function checkAllSets(totalSets, rest) {
 }
 
 function checkAllQueuedSets(totalSets) {
-  for (let i = 0; i < totalSets; i++) {
+  const rowCount = document.querySelectorAll('#session-modal-body .set-row[id^="set-row-"]').length || totalSets;
+  for (let i = 0; i < rowCount; i++) {
     const check = document.getElementById('set-check-' + i);
     const num   = document.getElementById('set-num-' + i);
     if (check && !check.classList.contains('checked')) {
@@ -4050,7 +4156,7 @@ function saveSession() {
     renderCalorieTracker();
     _debouncedSyncToCloud();
   } else {
-    const sets = ex.sets || 3;
+    const sets = document.querySelectorAll('#session-modal-body .set-row[id^="set-row-"]').length || (ex.sets || 3);
     const loggedSets = [];
     let maxWeight = 0;
     const LB_TO_KG_S = 0.453592;
@@ -5293,31 +5399,209 @@ function renderWorkoutQueue() {
     const totalSets = item.sets || 3;
     
     return `
-      <div class="workout-queue-item ${item.completed ? 'completed' : ''}">
-        <div class="workout-queue-item-info" style="flex:1">
-          <div class="workout-queue-item-name">
-            <span class="workout-queue-status ${item.completed ? 'completed' : ''}">
-              ${item.completed ? '<span class="ic ic-done"></span>' : (hasData ? '<span class="ic ic-note"></span>' : '<span class="ic ic-empty"></span>')}
-            </span>
-            ${escHtml(item.name)}
-          </div>
-          <div class="workout-queue-item-detail">
-            ${item.isCardio ? 'Cardio' : `${item.sets} sets × ${item.reps} reps · ${item.rest}s rest`}
-            ${hasData ? ` · Logged: ${completedSets}/${totalSets} sets` : ''}
-            ${item.completed && item.maxWeight > 0 ? ` · Max: ${item.maxWeight}kg` : ''}
-          </div>
+      <div class="workout-queue-item ${item.completed ? 'completed' : ''}" data-queue-idx="${idx}">
+        <div class="queue-swipe-delete-hint" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          Remove
         </div>
-        <div style="display:flex; gap: 6px;">
-          <button class="btn btn-sm btn-primary" style="padding: 4px 10px; font-size: 11px;" onclick="event.stopPropagation(); openQueueExerciseModal(${idx})">
-            ${hasData ? `${JBIcons.svg('pencil', { size: 14, color: 'currentColor' })} Edit` : `${JBIcons.svg('pencil', { size: 14, color: 'currentColor' })} Log`}
-          </button>
-          <button class="workout-queue-remove" onclick="event.stopPropagation(); removeFromQueue(${idx})" title="Remove">✕</button>
+        <div class="queue-swipe-inner">
+          <div class="workout-queue-item-info" style="flex:1">
+            <div class="workout-queue-item-name">
+              <span class="workout-queue-status ${item.completed ? 'completed' : ''}">
+                ${item.completed ? '<span class="ic ic-done"></span>' : (hasData ? '<span class="ic ic-note"></span>' : '<span class="ic ic-empty"></span>')}
+              </span>
+              ${escHtml(item.name)}
+            </div>
+            <div class="workout-queue-item-detail">
+              ${item.isCardio ? 'Cardio' : `${item.sets} sets × ${item.reps} reps · ${item.rest}s rest`}
+              ${hasData ? ` · Logged: ${completedSets}/${totalSets} sets` : ''}
+              ${item.completed && item.maxWeight > 0 ? ` · Max: ${item.maxWeight}kg` : ''}
+            </div>
+          </div>
+          <div style="display:flex; gap: 6px;">
+            <button class="btn btn-sm btn-primary" style="padding: 4px 10px; font-size: 11px;" onclick="event.stopPropagation(); openQueueExerciseModal(${idx})">
+              ${hasData ? `${JBIcons.svg('pencil', { size: 14, color: 'currentColor' })} Edit` : `${JBIcons.svg('pencil', { size: 14, color: 'currentColor' })} Log`}
+            </button>
+            ${!item.isCardio && !item.completed ? `<button class="btn btn-sm btn-ghost" onclick="event.stopPropagation(); addQueueSetDirect(${idx})" style="padding:4px 8px;font-size:11px;flex-shrink:0;color:var(--accent);">+ Set</button>` : ''}
+            <button class="workout-queue-remove" onclick="event.stopPropagation(); removeFromQueue(${idx})" title="Remove">✕</button>
+          </div>
         </div>
       </div>
     `;
   }).join('');
 
+  // Attach swipe-to-delete on every rendered item
+  container.querySelectorAll('.workout-queue-item[data-queue-idx]').forEach(el => {
+    attachQueueSwipe(el);
+  });
+}
 
+// ─── Swipe-to-delete for queue items (touch + mouse) ──────────────────────────
+function attachQueueSwipe(el) {
+  const DELETE_THRESHOLD = 80; // px left-drag before delete fires
+  const inner = el.querySelector('.queue-swipe-inner');
+  const hint  = el.querySelector('.queue-swipe-delete-hint');
+
+  let startX   = 0;
+  let startY   = 0;
+  let curX     = 0;
+  let active   = false; // a drag is in progress
+  let axisLocked = false; // confirmed horizontal
+  let isTouch  = false;
+
+  // Prevent browser native drag-and-drop behavior
+  el.addEventListener('dragstart', e => {
+    e.preventDefault();
+  });
+
+  // ── helpers ────────────────────────────────────────────────
+  function begin(clientX, clientY, touch = false) {
+    startX     = clientX;
+    startY     = clientY;
+    curX       = 0;
+    active     = true;
+    axisLocked = false;
+    isTouch    = touch;
+    if (inner) inner.style.transition = 'none';
+    el.style.transition = 'none';
+    console.log("[SwipeDiag] Drag began:", { startX, startY, isTouch, el });
+  }
+
+  function move(clientX, clientY) {
+    if (!active) return;
+    const dx = clientX - startX;
+    const dy = clientY - startY;
+
+    // Decide axis on first 6px of movement
+    if (!axisLocked) {
+      if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return; // too early
+      if (isTouch && Math.abs(dy) >= Math.abs(dx)) {
+        console.log("[SwipeDiag] Vertical scroll detected; cancelling drag.", { dx, dy });
+        // vertical — cancel and let the scroll handle it
+        active = false;
+        snap(true);
+        return;
+      }
+      axisLocked = true;
+      console.log("[SwipeDiag] Horizontal drag locked.");
+    }
+
+    // Only left swipe
+    curX = Math.min(0, dx);
+    const maxSwipe = el.offsetWidth || 300;
+    const pct = Math.min(1, -curX / maxSwipe);
+    const deletePct = Math.min(1, -curX / DELETE_THRESHOLD);
+
+    if (inner) inner.style.transform = `translateX(${curX}px)`;
+
+    // Dynamic red background transition
+    el.style.background  = `rgba(255, 71, 87, ${Math.min(1, pct * 2).toFixed(3)})`;
+    el.style.borderColor = deletePct > 0.15
+      ? `rgba(255, 71, 87, ${(0.3 + deletePct * 0.7).toFixed(3)})`
+      : '';
+
+    if (hint) hint.style.opacity = deletePct.toFixed(3);
+    console.log("[SwipeDiag] Drag moving:", { dx, curX, pct: pct.toFixed(2), deletePct: deletePct.toFixed(2) });
+  }
+
+  function end() {
+    if (!active) return;
+    console.log("[SwipeDiag] Drag ended at:", curX, "Threshold:", DELETE_THRESHOLD);
+    active     = false;
+    axisLocked = false;
+
+    if (-curX >= DELETE_THRESHOLD) {
+      deleteItem();
+    } else {
+      snap(true);
+    }
+  }
+
+  function snap(animate) {
+    console.log("[SwipeDiag] Snapping item back to origin.");
+    if (inner) {
+      inner.style.transition = animate
+        ? 'transform 0.28s cubic-bezier(0.34,1.2,0.64,1)'
+        : 'none';
+      inner.style.transform = '';
+    }
+    el.style.transition = animate
+      ? 'background 0.2s ease, border-color 0.2s ease'
+      : 'none';
+    el.style.background  = '';
+    el.style.borderColor = '';
+    if (hint) hint.style.opacity = '0';
+  }
+
+  function deleteItem() {
+    console.log("[SwipeDiag] Triggering item delete animations.");
+    // 1. slide inner fully off
+    if (inner) {
+      inner.style.transition = 'transform 0.22s ease-in';
+      inner.style.transform  = 'translateX(-105%)';
+    }
+    // 2. collapse the row height after inner slides out
+    setTimeout(() => {
+      const h = el.offsetHeight;
+      el.style.overflow   = 'hidden';
+      el.style.maxHeight  = h + 'px';
+      el.style.transition = 'max-height 0.25s ease, opacity 0.2s ease, padding 0.25s ease';
+      requestAnimationFrame(() => {
+        el.style.maxHeight    = '0';
+        el.style.paddingTop   = '0';
+        el.style.paddingBottom = '0';
+        el.style.opacity      = '0';
+      });
+      // 3. actually remove from data after collapse finishes
+      setTimeout(() => {
+        console.log("[SwipeDiag] Row collapsed. Removing index from data queue:", el.dataset.queueIdx);
+        removeFromQueue(parseInt(el.dataset.queueIdx, 10));
+      }, 270);
+    }, 200);
+  }
+
+  // ── Touch ──────────────────────────────────────────────────
+  el.addEventListener('touchstart', e => {
+    // don't hijack button taps
+    if (e.target.closest('button')) return;
+    begin(e.touches[0].clientX, e.touches[0].clientY, true);
+  }, { passive: true });
+
+  el.addEventListener('touchmove', e => {
+    if (!active) return;
+    const dx = Math.abs(e.touches[0].clientX - startX);
+    const dy = Math.abs(e.touches[0].clientY - startY);
+    // only prevent scroll once we're confident it's a horizontal drag
+    if (axisLocked || dx > dy) e.preventDefault();
+    move(e.touches[0].clientX, e.touches[0].clientY);
+  }, { passive: false });
+
+  el.addEventListener('touchend',    () => end());
+  el.addEventListener('touchcancel', () => { active = false; snap(true); });
+
+  // ── Mouse ──────────────────────────────────────────────────
+  // Use the list CONTAINER's mousedown so it doesn't get blocked by buttons
+  // We store a flag on the element so we only wire this once
+  if (el._swipeMouseBound) return;
+  el._swipeMouseBound = true;
+
+  el.addEventListener('mousedown', e => {
+    // ignore button clicks — let them fire normally
+    if (e.button !== 0 || e.target.closest('button')) return;
+    e.preventDefault(); // prevent text selection while dragging
+
+    begin(e.clientX, e.clientY, false);
+
+    const onMove = ev => move(ev.clientX, ev.clientY);
+    const onUp   = () => {
+      end();
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup',   onUp);
+    };
+
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup',   onUp);
+  });
 }
 
 
@@ -5398,7 +5682,10 @@ function openQueueExerciseModal(queueIndex) {
   }
   
   body.innerHTML = `
-    <div class="session-exercise-title">${escHtml(exercise.name)}</div>
+    <div class="session-exercise-title" style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+      <span>${escHtml(exercise.name)}</span>
+      ${!isCardio ? `<button class="btn btn-sm btn-ghost" onclick="addSessionSetRow()" style="padding:4px 10px;font-size:12px;flex-shrink:0;">+ Set</button>` : ''}
+    </div>
     ${setsHtml}
     ${!isCardio ? buildProgressiveOverloadTip(exercise) : ''}
     ${restTimerMarkup()}
@@ -5442,7 +5729,7 @@ function saveQueuedExercise() {
     toast(`✅ Saved ${exercise.name}: ${duration} minutes`);
     
   } else {
-    const sets = exercise.sets || 3;
+    const sets = document.querySelectorAll('#session-modal-body .set-row[id^="set-row-"]').length || (exercise.sets || 3);
     const loggedSets = [];
     let maxWeight = 0;
     let allCompleted = true;
@@ -7016,16 +7303,29 @@ async function saveHydrationReminderSettings() {
   if (settings.enabled) {
     // Request permission now — we're inside a button-click handler (user gesture)
     await requestNotificationPermission();
-    
+
     if (b && typeof b.setupBackgroundReminders === 'function') {
       try {
         b.setupBackgroundReminders('💧 Jim Buddy', settings.message, intervalSeconds, settings.startTime, settings.endTime);
         console.log('[NotificationBridge] Native background reminder scheduled successfully');
+
+        // Android 12+: check if exact-alarm permission is granted
+        // Without it, alarms may drift up to ~15 min on Doze mode
+        if (typeof b.canScheduleExactAlarms === 'function' && !b.canScheduleExactAlarms()) {
+          setTimeout(() => {
+            toast('⚠️ For precise reminders, grant "Alarms & Reminders" permission in the next screen');
+            setTimeout(() => {
+              if (typeof b.openExactAlarmSettings === 'function') {
+                b.openExactAlarmSettings();
+              }
+            }, 2000);
+          }, 500);
+        }
       } catch (e) {
         console.warn('[NotificationBridge] Failed to schedule native background reminder:', e);
       }
     }
-    
+
     startHydrationReminders(intervalSeconds);
   } else {
     if (b && typeof b.cancelBackgroundReminders === 'function') {
@@ -10055,6 +10355,26 @@ function buildMessageRowHTML(msg, currentUser, isLastSent) {
     ? `<button class="copy-split-btn" onclick="handleCopySplitToMySchedule(this)">📋 Copy to my splits</button>`
     : '';
 
+  const isInvite = typeof msg.content === 'string' && msg.content.startsWith('🏋️ Gym Invitation:');
+  let inviteButtons = '';
+  if (isInvite) {
+    const savedResponse = DB.get('invite_resp_' + msgId, null);
+    if (savedResponse === 'accepted') {
+      inviteButtons = `<div style="margin-top: 6px; font-weight: bold; color: var(--accent);">Accepted ✅</div>`;
+    } else if (savedResponse === 'declined') {
+      inviteButtons = `<div style="margin-top: 6px; font-weight: bold; color: var(--danger);">Declined ❌</div>`;
+    } else if (!isSent) {
+      inviteButtons = `
+        <div class="invite-actions" style="margin-top: 8px; display: flex; gap: 8px;">
+          <button class="btn btn-sm btn-primary invite-accept-btn" style="padding: 4px 8px; font-size: 11px;" onclick="handleInviteResponse('${msgId}', true, \`${msg.content.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)">Accept</button>
+          <button class="btn btn-sm btn-ghost invite-decline-btn" style="padding: 4px 8px; font-size: 11px; color: var(--text2);" onclick="handleInviteResponse('${msgId}', false, \`${msg.content.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)">Decline</button>
+        </div>
+      `;
+    } else {
+      inviteButtons = `<div style="margin-top: 6px; font-size: 11px; color: var(--text3);">Sent invitation</div>`;
+    }
+  }
+
   const seenLabel = (isSent && isLastSent && msg.read_at)
     ? `<div class="chat-seen-label" data-msg-id="${msgId}">${formatSeenLabel(msg.read_at)}</div>`
     : (isSent && isLastSent ? `<div class="chat-seen-label" data-msg-id="${msgId}" style="visibility:hidden;">Seen</div>` : '');
@@ -10065,6 +10385,7 @@ function buildMessageRowHTML(msg, currentUser, isLastSent) {
         ${deleteBtn}
         <div class="message-content">${escHtml(msg.content)}</div>
         ${splitBtn}
+        ${inviteButtons}
         <div class="message-meta">
           <span class="message-time">${dateStr}</span>
         </div>
@@ -10073,6 +10394,7 @@ function buildMessageRowHTML(msg, currentUser, isLastSent) {
     ${seenLabel}
   `;
 }
+
 
 // Format seen label text from a read_at timestamp string
 function formatSeenLabel(readAt) {
@@ -10543,6 +10865,46 @@ function shareSplitInChat() {
 }
 window.shareSplitInChat       = shareSplitInChat;
 window.toggleChatQuickActions = toggleChatQuickActions;
+
+function suggestWorkoutTime() {
+  const day = prompt("Enter day for workout (e.g. Monday, Tomorrow, 07/07):", "Tomorrow");
+  if (!day) return;
+  const time = prompt("Enter workout time (e.g. 6:00 PM, 18:00):", "6:00 PM");
+  if (!time) return;
+
+  const content = `🏋️ Gym Invitation: Let's hit the gym on ${day} at ${time}!`;
+  const input = document.getElementById('chat-message-input');
+  if (input) {
+    input.value = content;
+    handleSendChatMessage();
+  }
+}
+window.suggestWorkoutTime = suggestWorkoutTime;
+
+async function handleInviteResponse(msgId, accepted, originalContent) {
+  DB.set('invite_resp_' + msgId, accepted ? 'accepted' : 'declined');
+
+  // Instant local UI update
+  const row = document.querySelector(`.chat-message-row[data-msg-id="${msgId}"]`);
+  if (row) {
+    const actions = row.querySelector('.invite-actions');
+    if (actions) {
+      actions.outerHTML = accepted
+        ? `<div style="margin-top: 6px; font-weight: bold; color: var(--accent);">Accepted ✅</div>`
+        : `<div style="margin-top: 6px; font-weight: bold; color: var(--danger);">Declined ❌</div>`;
+    }
+  }
+
+  const cleanContent = originalContent.replace('🏋️ Gym Invitation: ', '').trim();
+  const responseText = accepted
+    ? `✅ Accepted invitation: ${cleanContent}`
+    : `❌ Declined invitation: ${cleanContent}`;
+
+  if (activeChatId) {
+    await sendMessage(activeChatId, responseText);
+  }
+}
+window.handleInviteResponse = handleInviteResponse;
 
 // Scroll to bottom helper
 function scrollToBottom() {

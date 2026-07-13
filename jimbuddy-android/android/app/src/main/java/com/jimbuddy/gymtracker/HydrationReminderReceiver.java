@@ -39,9 +39,16 @@ public class HydrationReminderReceiver extends BroadcastReceiver {
 
         long intervalMs = prefs.getLong("intervalMs", 3600 * 1000);
 
-        if (Intent.ACTION_BOOT_COMPLETED.equals(action) || "android.intent.action.MY_PACKAGE_REPLACED".equals(action)) {
-            Log.d(TAG, "Rescheduling hydration alarm after system boot/package update.");
-            NativeNotificationBridge.scheduleAlarm(context, intervalMs, false);
+        if (Intent.ACTION_BOOT_COMPLETED.equals(action)
+                || "android.intent.action.LOCKED_BOOT_COMPLETED".equals(action)
+                || "android.intent.action.QUICKBOOT_POWERON".equals(action)
+                || "android.intent.action.MY_PACKAGE_REPLACED".equals(action)) {
+            if (enabled) {
+                Log.d(TAG, "Rescheduling hydration alarm after boot/update (" + action + ")");
+                NativeNotificationBridge.scheduleAlarm(context, intervalMs, false);
+            } else {
+                Log.d(TAG, "Reminders disabled — skipping reschedule after boot");
+            }
             return;
         }
 

@@ -115,14 +115,6 @@ public class NativeNotificationBridge {
      * @param tag     Unique tag to group/collapse duplicate notifications
      * @param id      Numeric ID for the notification (use 0 for auto-increment)
      */
-    /**
-     * Show a native Android system notification for hydration reminders.
-     *
-     * @param title   Notification title (e.g., "💧 Jim Buddy")
-     * @param message Notification body (e.g., "Time to hydrate! 1200/2000ml")
-     * @param tag     Unique tag to group/collapse duplicate notifications
-     * @param id      Numeric ID for the notification (use 0 for auto-increment)
-     */
     @JavascriptInterface
     public void showNotification(String title, String message, String tag, int id) {
         Log.d(TAG, "showNotification called: title=" + title + ", message=" + message + ", tag=" + tag);
@@ -240,7 +232,39 @@ public class NativeNotificationBridge {
     }
 
     /**
+     * Returns whether the app can schedule exact alarms (Android 12+).
+     * On older versions always returns true.
+     */
+    @JavascriptInterface
+    public boolean canScheduleExactAlarms() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            android.app.AlarmManager alarmManager =
+                    (android.app.AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            return alarmManager != null && alarmManager.canScheduleExactAlarms();
+        }
+        return true;
+    }
+
+    /**
+     * Opens the system screen where the user can grant SCHEDULE_EXACT_ALARM.
+     * Only relevant on Android 12+.
+     */
+    @JavascriptInterface
+    public void openExactAlarmSettings() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            Intent intent = new Intent(
+                    android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
+                    Uri.parse("package:" + context.getPackageName())
+            );
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }
+    }
+
+    /**
      * Schedule a single alarm using AlarmManager.
+     * Uses exact alarms when permission is available, falls back to inexact
+     * (still wakes device) when SCHEDULE_EXACT_ALARM hasn't been granted.
      */
     public static void scheduleAlarm(Context context, long intervalMs, boolean immediate) {
         Intent intent = new Intent(context, HydrationReminderReceiver.class);
@@ -249,25 +273,45 @@ public class NativeNotificationBridge {
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
 
-        android.app.AlarmManager alarmManager = (android.app.AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        android.app.AlarmManager alarmManager =
+                (android.app.AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         if (alarmManager == null) return;
 
-        long triggerAtMillis = System.currentTimeMillis() + (immediate ? 1000 : intervalMs);
+        long triggerAtMillis = System.currentTimeMillis() + (immediate ? 5_000L : intervalMs);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            // Android 12+: check if exact-alarm permission is granted
+            if (alarmManager.canScheduleExactAlarms()) {
+                alarmManager.setExactAndAllowWhileIdle(
+                        android.app.AlarmManager.RTC_WAKEUP,
+                        triggerAtMillis,
+                        pendingIntent
+                );
+                Log.d(TAG, "Exact alarm scheduled in " + (immediate ? 5 : (intervalMs / 1000)) + "s");
+            } else {
+                // Fallback: inexact but still wakes device (max ~15 min drift on Doze)
+                alarmManager.setAndAllowWhileIdle(
+                        android.app.AlarmManager.RTC_WAKEUP,
+                        triggerAtMillis,
+                        pendingIntent
+                );
+                Log.w(TAG, "SCHEDULE_EXACT_ALARM not granted — using inexact alarm");
+            }
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             alarmManager.setExactAndAllowWhileIdle(
                     android.app.AlarmManager.RTC_WAKEUP,
                     triggerAtMillis,
                     pendingIntent
             );
+            Log.d(TAG, "Exact alarm (M-R) scheduled in " + (immediate ? 5 : (intervalMs / 1000)) + "s");
         } else {
             alarmManager.setExact(
                     android.app.AlarmManager.RTC_WAKEUP,
                     triggerAtMillis,
                     pendingIntent
             );
+            Log.d(TAG, "Exact alarm (legacy) scheduled in " + (immediate ? 5 : (intervalMs / 1000)) + "s");
         }
-        Log.d(TAG, "Alarm scheduled in " + (immediate ? 1 : (intervalMs / 1000)) + " seconds");
     }
 
     /**
