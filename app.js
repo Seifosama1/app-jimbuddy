@@ -1050,7 +1050,7 @@ function scaleUpDietPlan(weekPlan, targetCal) {
     });
 
     if (dayTotal < targetCal * 0.8 && dayTotal > 0) {
-      const scaleFactor = Math.max(1.5, targetCal / dayTotal);
+      const scaleFactor = Math.max(1.25, targetCal / dayTotal);
 
       Object.keys(meals).forEach(key => {
         const meal = meals[key];
