@@ -652,7 +652,7 @@ async function generateDietPlanFromAI(targetCal, targetP, targetC, targetF, days
       console.warn('API endpoint not found (404). Falling back to direct Groq client-side request...');
       toast('🔌 Local API missing. Fetching directly from Grok AI...');
       
-      const apiKey = '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';
+      const apiKey = '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';
            const prompt = `Create a 7-day healthy meal plan for someone eating exactly ${targetCal} kcal per day.
 
 FOOD SELECTION RULES :
@@ -1033,8 +1033,6 @@ function renderDietPage(plan) {
   }).join('');
 }
 
-
-
 function scaleUpDietPlan(weekPlan, targetCal) {
   if (!weekPlan || !weekPlan.length) return weekPlan;
 
@@ -1050,7 +1048,7 @@ function scaleUpDietPlan(weekPlan, targetCal) {
     });
 
     if (dayTotal < targetCal * 0.8 && dayTotal > 0) {
-      const scaleFactor = Math.max(1.25, targetCal / dayTotal);
+      const scaleFactor = Math.max(1.3, targetCal / dayTotal);
 
       Object.keys(meals).forEach(key => {
         const meal = meals[key];

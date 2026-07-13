@@ -19,7 +19,7 @@ export default async function handler(req, res) {
     days = 7
   } = req.body || {};
 
-  const apiKey = process.env.GROQ_API_KEY || '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';
+  const apiKey = process.env.GROK_API_KEY || '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';
   if (!apiKey) { res.status(500).json({ error: 'API key not configured' }); return; }
 
      const prompt = `Create a 7-day healthy meal plan for someone eating exactly ${targetCal} kcal per day.
