@@ -4482,19 +4482,17 @@
             </div>
           </div>
 
-          <!-- Custom Background -->
+          <!-- Theme Mode -->
           <div class="settings-section">
-            <div class="settings-section-title">🎨 Custom Background</div>
+            <div class="settings-section-title">🎨 Theme Mode</div>
             <div class="settings-row">
-              <span>Change app background</span>
+              <span>App Color Theme</span>
               <button
                 class="btn btn-sm"
-                onclick="
-                  closeModal('settings-modal');
-                  openBackgroundModal();
-                "
+                id="settings-theme-btn"
+                onclick="toggleAppTheme()"
               >
-                Customize
+                🌙 Dark Mode
               </button>
             </div>
           </div>
@@ -4677,15 +4675,25 @@
               class="settings-note"
               style="margin: 0 0 10px; padding-left: 0"
             >
-              Install Jim Buddy as an Android app for the smoothest experience.
+              Install Jim Buddy as a shortcut on your home screen or download the official Android APK file.
             </div>
-            <button
-              class="btn btn-primary download-apk-btn"
-              style="width: 100%"
-              onclick="downloadApkFile()"
-            >
-              ⬇ Download APK
-            </button>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <button
+                class="btn btn-primary"
+                id="settings-install-btn"
+                style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px;"
+                onclick="installPwa()"
+              >
+                📲 Add to Home Screen
+              </button>
+              <button
+                class="btn btn-ghost download-apk-btn"
+                style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px;"
+                onclick="downloadApkFile()"
+              >
+                ⬇ Download APK
+              </button>
+            </div>
           </div>
 
           <!-- Contact Us -->
@@ -5157,10 +5165,10 @@
             <path d="M15 11c1 1 2 2 2 4 0 2-1 3-2 3H9" />
           </svg>
         </div>
-        <h3 class="download-app-title">Get the Jim Buddy App</h3>
+        <h3 class="download-app-title">Download Jim Buddy APK</h3>
         <p class="download-app-desc">
-          Install the Android app for quicker access and the smoothest workout
-          experience — right from your home screen.
+          Install the official Android app by downloading the APK for the smoothest experience.
+          <span style="display: block; margin-top: 10px; font-size: 12px; opacity: 0.8;">💡 Note: You can also download or install it later anytime from Settings ⚙️</span>
         </p>
         <div class="download-app-actions">
           <button
@@ -5168,7 +5176,7 @@
             style="width: 100%"
             onclick="downloadApkFromPrompt()"
           >
-            ⬇ Download App
+            ⬇ Download APK
           </button>
           <button
             class="btn btn-ghost"

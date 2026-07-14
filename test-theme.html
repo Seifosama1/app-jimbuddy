@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jim Buddy - Theme Toggle Test Page</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Dark Theme (Default) Variables */
+    :root {
+      --bg: #0a0a0f;
+      --bg2: #111118;
+      --bg3: #1a1a24;
+      --card: rgba(255, 255, 255, 0.04);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent: #00e5a0;
+      --accent2: #00b4d8;
+      --accent-dim: rgba(0, 229, 160, 0.12);
+      --danger: #ff4757;
+      --warn: #ffb830;
+      --text: #f0f0f5;
+      --text2: #8888a0;
+      --text3: #55556a;
+      --radius: 14px;
+      --radius-sm: 8px;
+      --font: "Inter", sans-serif;
+    }
+
+    /* Light Theme Variables */
+    .light-theme {
+      --bg: #f4f5f8;
+      --bg2: #ffffff;
+      --bg3: #e9ecf3;
+      --card: rgba(0, 0, 0, 0.03);
+      --card-border: rgba(0, 0, 0, 0.08);
+      --accent: #00b07c;      /* Enhanced for high readability on light backgrounds */
+      --accent2: #008eb4;     /* Enhanced cyan for light theme contrast */
+      --accent-dim: rgba(0, 176, 124, 0.08);
+      --danger: #e23e4d;
+      --warn: #dca010;
+      --text: #101015;
+      --text2: #606478;
+      --text3: #9296aa;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font);
+      transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 40px 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Theme Switcher Button Style */
+    .theme-toggle-btn {
+      background: var(--bg3);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .theme-toggle-btn:hover {
+      background: var(--card-border);
+    }
+
+    /* Section styling */
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 20px 0 12px;
+      color: var(--text);
+    }
+
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    }
+
+    /* Calorie tracker component mockup */
+    .calorie-progress {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .calories-number {
+      font-size: 28px;
+      font-weight: 800;
+    }
+    .bar-container {
+      background: var(--bg3);
+      border-radius: 10px;
+      height: 12px;
+      width: 100%;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+    .bar-fill {
+      height: 100%;
+      width: 72%;
+      background: linear-gradient(90deg, var(--accent) 0%, var(--accent2) 100%);
+      border-radius: 10px;
+    }
+
+    /* Meal Block Mockups */
+    .meal-block {
+      background: var(--bg3);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      margin-bottom: 8px;
+      border-left: 3px solid transparent;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .meal-block.breakfast { border-left-color: var(--warn); }
+    .meal-block.lunch { border-left-color: var(--accent); }
+    .meal-block.dinner { border-left-color: var(--accent2); }
+
+    .meal-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text3);
+      min-width: 60px;
+    }
+    .meal-foods {
+      flex: 1;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .meal-macros {
+      font-size: 11px;
+      color: var(--text2);
+    }
+
+    .meal-block.completed {
+      opacity: 0.65;
+      background: var(--card);
+      border-left-style: dashed;
+    }
+    .completed .meal-foods,
+    .completed .meal-label,
+    .completed .meal-macros {
+      text-decoration: line-through;
+      color: var(--text3);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      width: 100%;
+      text-align: center;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 15px var(--accent-dim);
+    }
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
+
+    /* Settings toggler item mockup */
+    .settings-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .settings-row:last-child {
+      border-bottom: none;
+    }
+    .settings-row span {
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .theme-preview-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 15px;
+      background: var(--accent-dim);
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="logo">💪 Jim Buddy</div>
+      <button class="theme-toggle-btn" id="themeTogglerBtn" onclick="toggleLocalTheme()">
+        🌙 Dark Mode
+      </button>
+    </header>
+
+    <div class="theme-preview-badge" id="themeBadge">Preview Mode: Dark</div>
+
+    <div class="section-title">📊 Calorie Tracker</div>
+    <div class="card">
+      <div class="calorie-progress">
+        <div>
+          <span class="calories-number" id="caloriesVal">1,440</span>
+          <span style="color: var(--text2); font-size: 14px;">/ 2,000 kcal</span>
+        </div>
+        <div style="text-align: right; color: var(--text2); font-size: 13px;">72% Eaten</div>
+      </div>
+      <div class="bar-container">
+        <div class="bar-fill"></div>
+      </div>
+    </div>
+
+    <div class="section-title">🍳 Today's Diet Plan</div>
+    <div class="card" style="padding: 10px;">
+      <!-- Breakfast (Uncompleted) -->
+      <div class="meal-block breakfast">
+        <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
+          <input type="checkbox" style="cursor: pointer; width: 16px; height: 16px; accent-color: var(--accent);" onchange="toggleMockMeal(this)">
+          <span class="meal-label">Breakfast</span>
+          <span class="meal-foods">🍳 Oats + Protein Shake</span>
+        </div>
+        <span class="meal-macros">420 kcal</span>
+      </div>
+
+      <!-- Lunch (Completed) -->
+      <div class="meal-block lunch completed">
+        <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
+          <input type="checkbox" checked style="cursor: pointer; width: 16px; height: 16px; accent-color: var(--accent);" onchange="toggleMockMeal(this)">
+          <span class="meal-label">Lunch</span>
+          <span class="meal-foods">🍗 Chicken Breast + Rice</span>
+        </div>
+        <span class="meal-macros">650 kcal</span>
+      </div>
+
+      <!-- Dinner (Uncompleted) -->
+      <div class="meal-block dinner">
+        <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
+          <input type="checkbox" style="cursor: pointer; width: 16px; height: 16px; accent-color: var(--accent);" onchange="toggleMockMeal(this)">
+          <span class="meal-label">Dinner</span>
+          <span class="meal-foods">🐟 Salmon + Broccoli</span>
+        </div>
+        <span class="meal-macros">510 kcal</span>
+      </div>
+    </div>
+
+    <div class="section-title">⚙️ Settings</div>
+    <div class="card" style="padding: 0 16px;">
+      <div class="settings-row">
+        <span>Sound Effects</span>
+        <button class="theme-toggle-btn" style="padding: 6px 12px; font-size: 12px;">🔊 On</button>
+      </div>
+      <div class="settings-row">
+        <span>Theme Toggle (Replaced Button)</span>
+        <button class="theme-toggle-btn" style="padding: 6px 12px; font-size: 12px;" onclick="toggleLocalTheme()">Toggle Theme</button>
+      </div>
+      <div class="settings-row">
+        <span>Cloud Sync Status</span>
+        <span style="color: var(--accent); font-weight: 600; font-size: 13px;">Connected</span>
+      </div>
+    </div>
+
+    <div style="margin-top: 24px; text-align: center;">
+      <p style="font-size: 13px; color: var(--text2); line-height: 1.5;">
+        This is a live mockup demonstrating how the color tokens convert the app cleanly from modern dark styling to a crisp, high-contrast light layout.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    function toggleLocalTheme() {
+      const body = document.body;
+      const btn = document.getElementById('themeTogglerBtn');
+      const badge = document.getElementById('themeBadge');
+      
+      body.classList.toggle('light-theme');
+      
+      if (body.classList.contains('light-theme')) {
+        btn.innerHTML = '☀️ Light Mode';
+        badge.innerHTML = 'Preview Mode: Light';
+      } else {
+        btn.innerHTML = '🌙 Dark Mode';
+        badge.innerHTML = 'Preview Mode: Dark';
+      }
+    }
+
+    function toggleMockMeal(checkbox) {
+      const mealBlock = checkbox.closest('.meal-block');
+      if (checkbox.checked) {
+        mealBlock.classList.add('completed');
+      } else {
+        mealBlock.classList.remove('completed');
+      }
+    }
+  </script>
+</body>
+</html>

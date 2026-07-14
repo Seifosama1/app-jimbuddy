@@ -948,6 +948,88 @@ async function editMealText(mealKey, element) {
 }
 window.editMealText = editMealText;
 
+function toggleDietMeal(dayIdx, mealKey) {
+  const plan = DB.get('weeklyDietPlan', null);
+  if (!plan || !plan[dayIdx]) return;
+
+  const day = plan[dayIdx];
+  const meal = day.meals?.[mealKey];
+  if (!meal) return;
+
+  const foodLog = DB.get('foodLog', []);
+  const mealLabels = { breakfast: '🌅 Breakfast', lunch: '☀️ Lunch', dinner: '🌙 Dinner', snack1: '🍎 Snack 1', snack2: '🍌 Snack 2' };
+
+  if (!meal.checked) {
+    // Check it: add to foodLog
+    meal.checked = true;
+    meal.loggedIds = [];
+    const now = new Date().toISOString();
+
+    if (Array.isArray(meal.foods) && meal.foods.length > 0) {
+      for (let i = 0; i < meal.foods.length; i += 2) {
+        const id = meal.foods[i];
+        const qty = meal.foods[i + 1];
+        const dbFood = getAllFoods().find(f => f.id === id);
+        if (dbFood) {
+          const logId = 'food_diet_' + Date.now() + '_' + Math.random();
+          foodLog.push({
+            id: logId,
+            name: dbFood.name,
+            calories: dbFood.calories,
+            protein: dbFood.protein || 0,
+            carbs: dbFood.carbs || 0,
+            fats: dbFood.fats || 0,
+            serving: dbFood.serving || '1 serving',
+            quantity: qty,
+            date: now
+          });
+          meal.loggedIds.push(logId);
+        }
+      }
+    } else {
+      // Fallback: log a custom food item with meal macros
+      const logId = 'food_diet_' + Date.now() + '_' + Math.random();
+      const m = meal.macros || { calories: 0, protein: 0, carbs: 0, fats: 0 };
+      const foodText = meal.foodText || (Array.isArray(meal.items) ? meal.items.join(' + ') : 'Diet Meal');
+      foodLog.push({
+        id: logId,
+        name: `${mealLabels[mealKey] || mealKey}: ${foodText}`,
+        calories: m.calories,
+        protein: m.protein || 0,
+        carbs: m.carbs || 0,
+        fats: m.fats || 0,
+        serving: '1 meal',
+        quantity: 1,
+        date: now
+      });
+      meal.loggedIds.push(logId);
+    }
+    toast(`Checked: Added ${mealLabels[mealKey] || mealKey} to today's log! 🍳`);
+  } else {
+    // Uncheck it: remove from foodLog
+    meal.checked = false;
+    if (Array.isArray(meal.loggedIds)) {
+      meal.loggedIds.forEach(logId => {
+        const idx = foodLog.findIndex(item => item.id === logId);
+        if (idx !== -1) {
+          foodLog.splice(idx, 1);
+        }
+      });
+    }
+    meal.loggedIds = [];
+    toast(`Unchecked: Removed ${mealLabels[mealKey] || mealKey} from today's log.`);
+  }
+
+  DB.set('weeklyDietPlan', plan);
+  DB.set('foodLog', foodLog);
+
+  // Re-render UI
+  renderDietPage(plan);
+  renderCalorieTracker();
+
+  if (getAuthUser()) syncUserDataToCloud();
+}
+window.toggleDietMeal = toggleDietMeal;
 
 // Updated renderDietPage - uses natural language
 function renderDietPage(plan) {
@@ -1000,12 +1082,22 @@ function renderDietPage(plan) {
       }
 
       const m = meal.macros || { calories: 0, protein: 0, carbs: 0, fats: 0 };
+      const isChecked = meal.checked || false;
 
       return `
-        <div class="meal-block ${key}">
-          <span class="meal-label">${mealLabels[key]}</span>
-          <span class="meal-foods" ondblclick="editMealText('${key}', this)" style="cursor:text;font-weight:500;">${foodText}</span>
-          <span class="meal-macros">${m.calories} kcal · ${m.protein}g P · ${m.carbs}g C · ${m.fats}g F</span>
+        <div class="meal-block ${key}" style="${isChecked ? 'opacity: 0.65; background: var(--bg2); border-left-style: dashed;' : ''}">
+          <div style="display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0;">
+            <input 
+              type="checkbox" 
+              ${isChecked ? 'checked' : ''} 
+              onchange="toggleDietMeal(${dayIdx}, '${key}')" 
+              style="cursor: pointer; width: 16px; height: 16px; accent-color: var(--accent); margin: 0; flex-shrink: 0;"
+              title="Mark meal as completed"
+            >
+            <span class="meal-label" style="${isChecked ? 'text-decoration: line-through; color: var(--text3);' : ''}">${mealLabels[key]}</span>
+            <span class="meal-foods" ondblclick="editMealText('${key}', this)" style="cursor:text;font-weight:500;${isChecked ? 'text-decoration: line-through; color: var(--text3);' : ''}">${foodText}</span>
+          </div>
+          <span class="meal-macros" style="${isChecked ? 'text-decoration: line-through; color: var(--text3);' : ''}">${m.calories} kcal · ${m.protein}g P · ${m.carbs}g C · ${m.fats}g F</span>
         </div>
       `;
     }).join('');
@@ -8176,6 +8268,27 @@ function openSettingsModal() {
   openModal('settings-modal');
 }
 
+function toggleAppTheme() {
+  const currentTheme = DB.get('appTheme', 'dark');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  DB.set('appTheme', newTheme);
+  applyTheme(newTheme);
+  toast(`Theme set to ${newTheme} mode!`);
+}
+
+function applyTheme(theme) {
+  const body = document.body;
+  if (theme === 'light') {
+    body.classList.add('light-theme');
+  } else {
+    body.classList.remove('light-theme');
+  }
+  updateSettingsButtonStates();
+}
+
+window.toggleAppTheme = toggleAppTheme;
+window.applyTheme = applyTheme;
+
 function updateSettingsButtonStates() {
   // Update sound button
   const soundBtn = document.getElementById('settings-sound-btn');
@@ -8191,6 +8304,14 @@ function updateSettingsButtonStates() {
     const isPerfMode = document.body.classList.contains('performance-mode');
     perfBtn.textContent = isPerfMode ? '⚡ On' : '⚡ Off';
     perfBtn.style.background = isPerfMode ? 'var(--accent-dim)' : 'var(--card)';
+  }
+
+  // Update theme button
+  const themeBtn = document.getElementById('settings-theme-btn');
+  if (themeBtn) {
+    const currentTheme = DB.get('appTheme', 'dark');
+    themeBtn.textContent = currentTheme === 'light' ? '☀️ Light Mode' : '🌙 Dark Mode';
+    themeBtn.style.background = currentTheme === 'light' ? 'var(--accent-dim)' : 'var(--card)';
   }
 }
 
@@ -10116,12 +10237,46 @@ function downloadApkFile() {
 }
 window.downloadApkFile = downloadApkFile;
 
+// ─── PWA Installation & Add to Home Screen ─────────────────
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  console.log('[PWA] beforeinstallprompt event captured');
+});
+
+async function installPwa() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log(`[PWA] Install prompt outcome: ${outcome}`);
+    deferredPrompt = null;
+  } else {
+    if (navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) {
+      toast('Jim Buddy is already running in app mode! 🎉');
+    } else {
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      if (isIOS) {
+        alert("To add Jim Buddy to your home screen:\n\n1. Tap the Share button in Safari (at the bottom/top of the screen)\n2. Scroll down and select 'Add to Home Screen' 📲");
+      } else {
+        alert("To install directly:\n\nTap your browser's menu (three dots) and select 'Install app' or 'Add to Home screen' 📲");
+      }
+    }
+  }
+}
+window.installPwa = installPwa;
+
 // ─── First-Visit "Download App" Prompt ───────────────────
 // Shown once, the very first time someone opens the app. Persists via
 // localStorage (DB) so it never reappears once the person has chosen
 // either "Download App" or "No Thanks".
 function maybeShowDownloadAppPrompt() {
-  return; // disabled
+  const shown = DB.get('downloadPromptShown');
+  if (!shown) {
+    setTimeout(() => {
+      openModal('download-app-modal');
+    }, 1500);
+  }
 }
 
 function downloadApkFromPrompt() {
@@ -11377,3 +11532,6 @@ function openDietModal() {
   openModal('diet-modal');
 }
 window.openDietModal = openDietModal;
+
+// Initialize app theme from database settings
+applyTheme(DB.get('appTheme', 'dark'));

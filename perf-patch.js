@@ -742,22 +742,44 @@
           const meal = meals[key];
           if (!meal) return '';
           const foodNames = [];
-          for (let i = 0; i < meal.foods.length; i += 2) {
-            const id = meal.foods[i];
-            const qty = meal.foods[i + 1];
-            const dbFood = FOOD_DATABASE.find(f => f.id === id);
-            if (dbFood) {
-              foodNames.push(`${qty}× ${dbFood.name}`);
+          if (Array.isArray(meal.foods) && meal.foods.length > 0) {
+            for (let i = 0; i < meal.foods.length; i += 2) {
+              const id = meal.foods[i];
+              const qty = meal.foods[i + 1];
+              const dbFood = (typeof getAllFoods === 'function' ? getAllFoods() : FOOD_DATABASE).find(f => f.id === id);
+              if (dbFood) {
+                foodNames.push(`${qty}× ${dbFood.name}`);
+              }
             }
           }
+
+          let foodsHTML = '';
+          if (foodNames.length > 0) {
+            foodsHTML = foodNames.map(name => `<span class="food-item">${name}</span>`).join('');
+          } else {
+            const fallbackText = meal.foodText || (Array.isArray(meal.items) ? meal.items.join(' + ') : 'No foods listed');
+            foodsHTML = `<span style="font-weight: 500;">${fallbackText}</span>`;
+          }
+
           const m = meal.macros || { calories: 0, protein: 0, carbs: 0, fats: 0 };
+          const isChecked = meal.checked || false;
+
           return `
-            <div class="meal-block ${mealClasses[key]}">
-              <span class="meal-label">${mealLabels[key]}</span>
-              <span class="meal-foods">
-                ${foodNames.map(name => `<span class="food-item">${name}</span>`).join('')}
-              </span>
-              <span class="meal-macros">${m.calories} kcal · ${m.protein}g P · ${m.carbs}g C · ${m.fats}g F</span>
+            <div class="meal-block ${mealClasses[key]}" style="${isChecked ? 'opacity: 0.65; background: var(--bg2); border-left-style: dashed;' : ''}">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0;">
+                <input 
+                  type="checkbox" 
+                  ${isChecked ? 'checked' : ''} 
+                  onchange="toggleDietMeal(${dayIdx}, '${key}')" 
+                  style="cursor: pointer; width: 16px; height: 16px; accent-color: var(--accent); margin: 0; flex-shrink: 0;"
+                  title="Mark meal as completed"
+                >
+                <span class="meal-label" style="${isChecked ? 'text-decoration: line-through; color: var(--text3);' : ''}">${mealLabels[key]}</span>
+                <span class="meal-foods" style="${isChecked ? 'text-decoration: line-through; color: var(--text3);' : ''}">
+                  ${foodsHTML}
+                </span>
+              </div>
+              <span class="meal-macros" style="${isChecked ? 'text-decoration: line-through; color: var(--text3);' : ''}">${m.calories} kcal · ${m.protein}g P · ${m.carbs}g C · ${m.fats}g F</span>
             </div>
           `;
         }).join('');

@@ -25,6 +25,338 @@
   --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.light-theme {
+  --bg: #f4f5f8;
+  --bg2: #ffffff;
+  --bg3: #e9ecf3;
+  --card: rgba(0, 0, 0, 0.03);
+  --card-border: rgba(0, 0, 0, 0.09);
+  --accent: #02805e;
+  --accent2: #0076a0;
+  --accent-dim: rgba(0, 146, 106, 0.1);
+  --danger: #d42f3e;
+  --warn: #c08a00;
+  --text: #0d0d12;
+  --text2: #4a4e62;
+  --text3: #7c8098;
+}
+
+/* ── Light theme: fix hardcoded dark backgrounds ── */
+
+.light-theme #app-header {
+  background: rgba(244, 245, 248, 0.92) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.09) !important;
+}
+
+.light-theme #bottom-nav {
+  background: rgba(255, 255, 255, 0.96) !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.09) !important;
+}
+
+/* Cards, modals, workout queue panel — all dark rgba hardcoded */
+.light-theme .card,
+.light-theme .modal,
+.light-theme .workout-queue-panel {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Second .card definition (line ~5187) */
+.light-theme .card {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Modal overlays and chat panels */
+.light-theme .modal {
+  background: var(--bg2) !important;
+  border: 1px solid var(--card-border) !important;
+}
+
+/* Stat cards on home page */
+.light-theme .stat-card {
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Modal header and body */
+.light-theme .modal-header {
+  background: var(--bg2) !important;
+  border-bottom: 1px solid var(--card-border) !important;
+}
+
+/* Toast notifications */
+.light-theme .toast {
+  background: linear-gradient(135deg, #ffffff, #f0f2f7) !important;
+  color: var(--text) !important;
+  border-left: 3px solid var(--accent) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Form inputs */
+.light-theme .form-input,
+.light-theme .select-input,
+.light-theme input[type="text"],
+.light-theme input[type="number"],
+.light-theme input[type="email"],
+.light-theme input[type="password"],
+.light-theme textarea,
+.light-theme select {
+  background: #f0f2f7 !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+  color: var(--text) !important;
+}
+
+.light-theme .form-input::placeholder,
+.light-theme input::placeholder,
+.light-theme textarea::placeholder {
+  color: var(--text3) !important;
+}
+
+/* Progress bars bg track */
+.light-theme .progress-bg,
+.light-theme .progress-track,
+.light-theme [class*="progress-bg"],
+.light-theme [class*="bar-bg"] {
+  background: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Meal blocks in diet page */
+.light-theme .meal-block {
+  background: #f0f2f7 !important;
+}
+
+/* Gymbro / Chat panels */
+.light-theme .gymbro-chat-box,
+.light-theme .gymbro-chat-panel {
+  background: var(--bg3, #e9ecf3) !important;
+  border: 1px solid var(--card-border) !important;
+}
+
+.light-theme .chat-bubble-them {
+  background: #e2e5ef !important;
+  color: var(--text) !important;
+}
+
+/* White-on-dark borders — exercise chips, view buttons */
+.light-theme .view-btn {
+  border-color: rgba(0, 0, 0, 0.15) !important;
+  color: var(--text2) !important;
+}
+
+.light-theme .up-split-exercise-chip {
+  background: rgba(0, 0, 0, 0.06) !important;
+  border: 1px solid var(--card-border) !important;
+  color: var(--text2) !important;
+}
+
+/* Exercise view modal spinner */
+.light-theme .evm-spinner {
+  border: 3px solid rgba(0, 0, 0, 0.1) !important;
+  border-top-color: var(--accent) !important;
+}
+
+/* Tab buttons and section tabs */
+.light-theme .tab-btn {
+  color: var(--text2) !important;
+}
+.light-theme .tab-btn.active {
+  color: var(--accent) !important;
+  background: var(--accent-dim) !important;
+}
+
+/* Settings sections */
+.light-theme .settings-section {
+  background: var(--bg2) !important;
+  border: 1px solid var(--card-border) !important;
+}
+
+.light-theme .settings-section-title {
+  color: var(--text) !important;
+}
+
+.light-theme .settings-row {
+  border-bottom: 1px solid var(--card-border) !important;
+}
+
+.light-theme .settings-note {
+  color: var(--text3) !important;
+}
+
+/* Greeting text */
+.light-theme .greeting-title {
+  color: var(--text) !important;
+}
+
+/* Nav labels */
+.light-theme .nav-label {
+  color: var(--text2) !important;
+}
+.light-theme .nav-btn.active .nav-label,
+.light-theme .nav-btn.active .nav-icon {
+  color: var(--accent) !important;
+}
+
+/* icon-btn */
+.light-theme .icon-btn {
+  color: var(--text2) !important;
+}
+
+/* Day diet card */
+.light-theme .day-diet-card {
+  background: var(--bg2) !important;
+  border: 1px solid var(--card-border) !important;
+}
+
+/* Loading screen */
+.light-theme #loading-screen {
+  background: #f4f5f8 !important;
+}
+
+/* Hardcoded rgba(17,17,24) — gymbro online badge ring */
+.light-theme .gymbro-friend-card-status-badge {
+  border-color: var(--bg2) !important;
+}
+
+/* Empty state text */
+.light-theme .muted-text,
+.light-theme .empty-state p {
+  color: var(--text3) !important;
+}
+
+/* section headers / page titles */
+.light-theme .page-title,
+.light-theme .section-title {
+  color: var(--text) !important;
+}
+
+/* Buttons — ghost variant contrast on light */
+.light-theme .btn-ghost {
+  background: #e9ecf3 !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  color: var(--text) !important;
+}
+.light-theme .btn-ghost:hover {
+  background: #dde0e9 !important;
+}
+
+/* btn-primary readable on light */
+.light-theme .btn-primary {
+  color: #ffffff !important;
+}
+
+/* Scrollbar on light */
+.light-theme ::-webkit-scrollbar-track {
+  background: #e9ecf3 !important;
+}
+.light-theme ::-webkit-scrollbar-thumb {
+  background: #b0b4c8 !important;
+}
+.light-theme ::-webkit-scrollbar-thumb:hover {
+  background: #8a8ea8 !important;
+}
+
+/* ── CALORIE TRACKER — light theme fixes ── */
+
+/* Card background: tinted gradient works on dark, on light we need more visible */
+.light-theme .calorie-summary-card {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 146, 107, 0.199),
+    rgba(115, 210, 245, 0.04)
+  ) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Ring track circle (was near-invisible white stroke on light bg) */
+.light-theme .cal-ring-bg {
+  stroke: rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Main calorie number inside ring: was hardcoded #fff */
+.light-theme .cal-ring-value {
+  color: #0d0d12 !important;
+}
+
+/* "KCAL" unit text */
+.light-theme .cal-ring-unit {
+  color: var(--accent) !important;
+}
+
+/* "of 2000" goal text — var(--text1) is undefined, use --text2 */
+.light-theme .cal-ring-goal {
+  color: #4a4e62 !important;
+}
+
+/* Macro chip labels: neon colors invisible on white */
+.light-theme .cal-macro-chip.protein .cal-macro-label { color: #007d55 !important; }
+.light-theme .cal-macro-chip.carbs  .cal-macro-label { color: #005f8a !important; }
+.light-theme .cal-macro-chip.fats   .cal-macro-label { color: #9a6800 !important; }
+
+/* Macro chip values: was hardcoded #fff */
+.light-theme .cal-macro-val {
+  color: #0d0d12 !important;
+}
+
+/* Macro chip backgrounds — slightly more opaque on light */
+.light-theme .cal-macro-chip.protein {
+  background: rgba(0, 146, 106, 0.1) !important;
+  border-color: rgba(0, 146, 106, 0.25) !important;
+}
+.light-theme .cal-macro-chip.carbs {
+  background: rgba(0, 118, 160, 0.1) !important;
+  border-color: rgba(0, 118, 160, 0.25) !important;
+}
+.light-theme .cal-macro-chip.fats {
+  background: rgba(155, 104, 0, 0.08) !important;
+  border-color: rgba(155, 104, 0, 0.22) !important;
+}
+
+/* Eaten / Burnt breakdown values: var(--text1) is undefined */
+.light-theme .breakdown-val {
+  color: #0d0d12 !important;
+}
+
+/* Quick food cards */
+.light-theme .quick-food-item {
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+/* ── HYDRATION — light theme fixes ── */
+
+/* Water bottle widget: was nearly transparent on white */
+.light-theme .water-bottle {
+  background: rgba(0, 118, 160, 0.06) !important;
+  box-shadow: 0 0 20px rgba(0, 118, 160, 0.12) !important;
+}
+
+/* The "150" number inside the bottle: was hardcoded #fff */
+.light-theme .water-label-overlay span:first-child {
+  color: #0d0d12 !important;
+  text-shadow: 0 1px 3px rgba(255,255,255,0.8) !important;
+}
+
+/* "ml" unit below the number inside bottle: was rgba(255,255,255,0.7) */
+.light-theme .water-unit {
+  color: rgba(0, 0, 0, 0.55) !important;
+}
+
+/* Water quick-add buttons */
+.light-theme .water-btn {
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 118, 160, 0.22) !important;
+  color: #0d0d12 !important;
+}
+.light-theme .water-btn:hover,
+.light-theme .water-btn:active {
+  background: rgba(0, 118, 160, 0.08) !important;
+  border-color: var(--accent2) !important;
+}
+
+
 *,
 *::before,
 *::after {
@@ -7852,3 +8184,4 @@ html.no-blur .gymbro-friend-card {
 .check-all-btn:active {
   transform: scale(0.93);
 }
+

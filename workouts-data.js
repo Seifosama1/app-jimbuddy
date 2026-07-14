@@ -45,7 +45,7 @@ const EXERCISE_LIBRARY = [
       'Unrack and lower bar to lower chest.',
       'Press back up explosively to full arm extension.'
     ],
-    images: [W + 'Decline-bench-press-2.png', W + 'Decline-dumbbell-bench-press-1.png']
+    images: ['https://i.pinimg.com/originals/bc/d2/05/bcd205cf9e64811981d715deebaa41da.gif', 'https://i.pinimg.com/originals/bc/d2/05/bcd205cf9e64811981d715deebaa41da.gif']
   },
   {
     id: 'db-fly', name: 'Dumbbell Fly', muscle: 'Chest', sets: 3, reps: 12, rest: 60,
@@ -84,7 +84,8 @@ const EXERCISE_LIBRARY = [
       'With slight elbow bend, bring hands together in an arc.',
       'Squeeze chest at the bottom, return slowly.'
     ],
-    images: [W + 'Cable-crossover-1.png', W + 'Cable-crossover-2.png']
+    images: ['https://fitnessprogramer.com/wp-content/uploads/2021/02/Cable-Crossover.gif',
+       'https://fitnessprogramer.com/wp-content/uploads/2021/02/Cable-Crossover.gif']
   },
   {
     id: 'chest-dip', name: 'Dip (Chest)', muscle: 'Chest', sets: 3, reps: 12, rest: 75,
@@ -100,7 +101,7 @@ const EXERCISE_LIBRARY = [
     images: ['https://gymvisual.com/img/p/4/9/8/4/4984.gif',  'https://gymvisual.com/img/p/4/9/8/4/4984.gif']
   },
   {
-    id: 'pec-deck', name: 'Pec Deck', muscle: 'Chest', sets: 3, reps: 15, rest: 60,
+    id: 'pec-deck', name: 'Chest Machine Fly', muscle: 'Chest', sets: 3, reps: 15, rest: 60,
     equipment: 'Pec Deck Machine',
     description: 'A machine isolation exercise that trains the pectoralis major in the fly pattern with constant resistance and built-in safety.',
     equipmentNotes: 'Adjust seat so handles align with mid-chest. Keep elbows slightly bent and avoid hyper-extending the arms back.',
@@ -167,7 +168,29 @@ const EXERCISE_LIBRARY = [
       'Extend arms fully under control. Repeat.'
     ],
     images: [W + 'Cable-seated-rows-1.png', W + 'Cable-seated-rows-2.png']
-  },
+  },{
+  id: 'seated-cable-row-wide',
+  name: 'Seated Cable Row (Wide)',
+  muscle: 'Back',
+  sets: 4,
+  reps: 10,
+  rest: 75,
+  equipment: 'Cable Machine, Wide-Grip Bar',
+  description: 'A horizontal pulling exercise performed with a wide overhand grip. Excellent for building upper back thickness, lats, and rhomboids while improving posture.',
+  equipmentNotes: 'Use a wide straight bar or lat pulldown bar. Sit tall with slight knee bend. Pull the bar to your lower chest / upper abdomen.',
+  instructions: [
+    'Sit at the cable row station with feet planted on the platform.',
+    'Grab the wide bar with an overhand grip wider than shoulder-width.',
+    'Keep your back straight and chest up.',
+    'Pull the bar toward your upper abdomen, driving elbows back and squeezing shoulder blades together.',
+    'Pause briefly at the peak contraction.',
+    'Return the bar slowly to full arm extension under control.'
+  ],
+  images: [
+    'https://gymvisual.com/img/p/1/5/2/4/4/15244.gif',
+    'https://gymvisual.com/img/p/1/5/2/4/4/15244.gif'
+  ]
+},
   {
     id: 'barbell-row', name: 'Barbell Row', muscle: 'Back', sets: 4, reps: 8, rest: 90,
     equipment: 'Barbell',
@@ -195,6 +218,29 @@ const EXERCISE_LIBRARY = [
     ],
     images: ['https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Rear_deltoid_row_dumbbell_1.svg/960px-Rear_deltoid_row_dumbbell_1.svg.png', 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Rear_deltoid_row_dumbbell_2.svg/960px-Rear_deltoid_row_dumbbell_2.svg.png']
   },
+  {
+  id: 'single-arm-db-row',
+  name: 'Single-Arm Dumbbell Row',
+  muscle: 'Back',
+  sets: 4,
+  reps: 10,
+  rest: 60,
+  equipment: 'Dumbbell, Bench',
+  description: 'A unilateral rowing exercise that builds back thickness, lats, and rhomboids while correcting left-to-right imbalances. One of the best mass builders for the back.',
+  equipmentNotes: 'Brace your free hand on the bench. Keep your back flat and pull your elbow high and back (past the hip) for maximum lat engagement.',
+  instructions: [
+    'Place one knee and same-side hand on the bench for support.',
+    'Hold a dumbbell in the opposite hand with arm fully extended.',
+    'Keep your back flat and core braced.',
+    'Row the dumbbell toward your hip by driving your elbow back and up.',
+    'Squeeze your back muscles hard at the top.',
+    'Lower the weight under full control and repeat.'
+  ],
+  images: [
+    'https://i.pinimg.com/originals/86/02/f6/8602f61f6089c5a01c042626176381f9.gif',
+    'https://i.pinimg.com/originals/86/02/f6/8602f61f6089c5a01c042626176381f9.gif'
+  ]
+},
   {
     id: 'tbar-row', name: 'T-Bar Row', muscle: 'Back', sets: 3, reps: 10, rest: 90,
     equipment: 'T-Bar Machine or Barbell in Corner',
@@ -849,7 +895,29 @@ const EXERCISE_LIBRARY = [
       'Lower under control.'
     ],
     images: [W + 'Cable-seated-rows-1.png', W + 'Cable-seated-rows-2.png']
-  },
+  },{
+  id: 'db-shrug',
+  name: 'Dumbbell Shrug',
+  muscle: 'Back',
+  sets: 4,
+  reps: 12,
+  rest: 60,
+  equipment: 'Dumbbells',
+  description: 'A classic isolation exercise for the upper trapezius. Dumbbell shrugs allow a greater range of motion and natural hand positioning compared to barbell shrugs.',
+  equipmentNotes: 'Hold dumbbells at your sides with a neutral grip. Keep your arms straight throughout — only the shoulders move. Avoid rolling the shoulders; go straight up and down. Can be done standing or seated.',
+  instructions: [
+    'Stand with feet shoulder-width apart, dumbbells hanging at your sides.',
+    'Keep your chest up, shoulders back, and core braced.',
+    'Shrug your shoulders straight up toward your ears as high as possible.',
+    'Hold the contraction at the top for 1–2 seconds.',
+    'Lower the weights slowly under control to full stretch.',
+    'Repeat for the desired reps.'
+  ],
+  images: [
+    'https://fitnessprogramer.com/wp-content/uploads/2021/04/Dumbbell-Shrug.gif',
+    'https://fitnessprogramer.com/wp-content/uploads/2021/04/Dumbbell-Shrug.gif'
+  ]
+},
   {
     id: 'shrugs', name: 'Barbell Shrug', muscle: 'Back', sets: 4, reps: 12, rest: 60,
     equipment: 'Barbell or Dumbbells',
