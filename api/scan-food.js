@@ -29,7 +29,7 @@ Return ONLY the JSON, no markdown, no explanation.`;
         'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: 'meta-llama/llama-4-scout-17b-16e-instruct',
+        model: 'qwen/qwen3.6-27b',
         messages: [{
           role: 'user',
           content: [
