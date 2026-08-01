@@ -19,7 +19,8 @@ export default async function handler(req, res) {
 
   const prompt = `You are a precise nutrition analyst. Analyze this food image and return ONLY a valid JSON object with these exact fields:
 {"name":"food name (be specific)","calories":<kcal>,"protein":<g>,"carbs":<g>,"fats":<g>,"fiber":<g or null>,"servingSize":"<estimated portion>","confidence":"<high|medium|low>","notes":"<brief note>"}
-Return ONLY the JSON, no markdown, no explanation.`;
+Return ONLY the JSON, no markdown, no explanation.
+Analyze the food image and estimate macronutrients for a standard single serving (~200g-250g for burgers). Calculate total calories strictly using the formula: Calories = (Protein * 4) + (Carbs * 4) + (Fat * 9).`;
 
   try {
     const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -38,7 +39,7 @@ Return ONLY the JSON, no markdown, no explanation.`;
           ]
         }],
         temperature: 0.1,
-        max_tokens: 512
+        max_tokens: 2048
       })
     });
 
