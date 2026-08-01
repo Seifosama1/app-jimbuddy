@@ -51,13 +51,23 @@ Return ONLY the JSON, no markdown, no explanation.`;
 
     const groqData = await groqRes.json();
     const rawText = groqData?.choices?.[0]?.message?.content || '';
-    const cleaned = rawText.replace(/```json|```/g, '').trim();
+    
+    // Strip reasoning <think>...</think> tags
+    let cleaned = rawText.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+    cleaned = cleaned.replace(/```json|```/g, '').trim();
+
+    // Extract JSON block
+    const jsonStart = cleaned.indexOf('{');
+    const jsonEnd = cleaned.lastIndexOf('}');
+    if (jsonStart !== -1 && jsonEnd !== -1) {
+      cleaned = cleaned.substring(jsonStart, jsonEnd + 1);
+    }
 
     let nutrition;
     try {
       nutrition = JSON.parse(cleaned);
     } catch {
-      res.status(502).json({ error: 'Could not parse response', raw: rawText });
+      res.status(502).json({ error: 'Could not parse response', raw: rawText, cleaned });
       return;
     }
 
