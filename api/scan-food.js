@@ -14,13 +14,14 @@ export default async function handler(req, res) {
   const { imageBase64, mimeType = 'image/jpeg' } = req.body || {};
   if (!imageBase64) { res.status(400).json({ error: 'imageBase64 is required' }); return; }
 
-  const apiKey = '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';
+  const apiKey = process.env.GROK_API_KEY || process.env.GROQ_API_KEY || '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';
   if (!apiKey) { res.status(500).json({ error: 'API key not configured' }); return; }
 
   const prompt = `You are a precise nutrition analyst. Analyze this food image and return ONLY a valid JSON object with these exact fields:
 {"name":"food name (be specific)","calories":<kcal>,"protein":<g>,"carbs":<g>,"fats":<g>,"fiber":<g or null>,"servingSize":"<estimated portion>","confidence":"<high|medium|low>","notes":"<brief note>"}
 Return ONLY the JSON, no markdown, no explanation.
-Analyze the food image and estimate macronutrients for a standard single serving (~200g-250g for burgers). Calculate total calories strictly using the formula: Calories = (Protein * 4) + (Carbs * 4) + (Fat * 9).`;
+Analyze the food image and estimate macronutrients for a standard single serving (~200g-250g for burgers). Calculate total calories strictly using the formula: Calories = (Protein * 4) + (Carbs * 4) + (Fat * 9).
+Keep your thinking process (<think> block) extremely short (under 15 words) to optimize tokens. Do not write a long analysis.`;
 
   try {
     const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
