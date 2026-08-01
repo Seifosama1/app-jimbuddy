@@ -2282,15 +2282,40 @@ function clearFoodScan() {
 }
 window.clearFoodScan = clearFoodScan;
 
+let _foodScanCooldownTimer = null;
+let _foodScanCooldownSeconds = 0;
+
+function _startFoodScanCooldown(scanBtn, seconds = 15) {
+  _foodScanCooldownSeconds = seconds;
+  if (scanBtn) {
+    scanBtn.disabled = true;
+    scanBtn.dataset.originalText = scanBtn.dataset.originalText || scanBtn.textContent;
+  }
+  clearInterval(_foodScanCooldownTimer);
+  _foodScanCooldownTimer = setInterval(() => {
+    _foodScanCooldownSeconds--;
+    if (scanBtn) scanBtn.textContent = `Wait ${_foodScanCooldownSeconds}s...`;
+    if (_foodScanCooldownSeconds <= 0) {
+      clearInterval(_foodScanCooldownTimer);
+      _foodScanCooldownTimer = null;
+      if (scanBtn) {
+        scanBtn.disabled = false;
+        scanBtn.textContent = scanBtn.dataset.originalText || 'Analyse Food';
+      }
+    }
+  }, 1000);
+}
+
 async function runFoodScan() {
   if (!_foodScanImageBase64) { toast('Please select a photo first'); return; }
+  if (_foodScanCooldownTimer) { toast(`Please wait ${_foodScanCooldownSeconds}s before scanning again.`); return; }
 
   const loadingEl = document.getElementById('food-scan-loading');
   const resultEl  = document.getElementById('food-scan-result');
   const scanBtn   = document.getElementById('food-scan-btn');
 
   if (loadingEl) loadingEl.style.display = 'block';
-  if (scanBtn)   scanBtn.disabled = true;
+  if (scanBtn)   { scanBtn.disabled = true; scanBtn.textContent = 'Analysing...'; }
   if (resultEl)  { resultEl.style.display = 'none'; resultEl.innerHTML = ''; }
 
   try {
@@ -2300,27 +2325,40 @@ async function runFoodScan() {
       body: JSON.stringify({ imageBase64: _foodScanImageBase64, mimeType: _foodScanMimeType })
     });
 
+    // Parse response body first regardless of status
+    let data = {};
+    try { data = await res.json(); } catch (_) {}
+
     if (!res.ok) {
-      const errText = await res.text();
-      throw new Error('Scan failed: ' + res.status);
+      // Use the server's human-readable error if available, else fall back to generic messages
+      const friendlyMsg = data.error || (() => {
+        if (res.status === 429) return 'Too many scans too quickly. Please wait and try again.';
+        if (res.status === 503 || res.status === 504) return 'The AI service is temporarily overloaded. Try again in a moment.';
+        if (res.status === 400) return 'Invalid image. Please choose a different photo.';
+        if (res.status === 401 || res.status === 403) return 'AI service authentication error. Please contact support.';
+        return 'Analysis failed. Please try again.';
+      })();
+      throw new Error(friendlyMsg);
     }
 
-    const data = await res.json();
     if (data.error) throw new Error(data.error);
     renderFoodScanResult(data);
   } catch (err) {
     console.error('[FoodScan]', err);
-    toast('Could not analyse photo. Try again.');
+    const msg = err.message || 'Could not analyse photo. Try again.';
+    toast(msg);
     if (resultEl) {
       resultEl.style.display = 'block';
-      resultEl.innerHTML = `<div class="food-scan-error">⚠️ ${escHtml(err.message)}</div>`;
+      resultEl.innerHTML = `<div class="food-scan-error">⚠️ ${escHtml(msg)}</div>`;
     }
   } finally {
     if (loadingEl) loadingEl.style.display = 'none';
-    if (scanBtn)   scanBtn.disabled = false;
+    // Start cooldown — button re-enables automatically after 15s
+    _startFoodScanCooldown(scanBtn, 15);
   }
 }
 window.runFoodScan = runFoodScan;
+
 
 function renderFoodScanResult(data) {
   const resultEl = document.getElementById('food-scan-result');

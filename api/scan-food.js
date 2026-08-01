@@ -49,7 +49,24 @@ Keep your thinking process (<think> block) extremely short (under 15 words) to o
     if (!groqRes.ok) {
       const errText = await groqRes.text();
       console.error('[scan-food] Groq error:', errText);
-      res.status(502).json({ error: 'Groq API error', detail: errText });
+
+      let userMessage = 'The AI service is temporarily unavailable. Please try again.';
+      try {
+        const errJson = JSON.parse(errText);
+        const code = errJson?.error?.code || '';
+        const msg  = errJson?.error?.message || '';
+        if (groqRes.status === 429 || code === 'rate_limit_exceeded') {
+          userMessage = 'Too many scans too quickly. Please wait a few seconds and try again.';
+        } else if (groqRes.status === 401 || code === 'invalid_api_key') {
+          userMessage = 'AI service authentication failed. Please contact support.';
+        } else if (msg.toLowerCase().includes('image')) {
+          userMessage = 'Could not read the image. Please try a clearer photo.';
+        } else if (groqRes.status === 503 || groqRes.status === 504) {
+          userMessage = 'The AI service is overloaded right now. Please try again in a moment.';
+        }
+      } catch (_) {}
+
+      res.status(502).json({ error: userMessage });
       return;
     }
 
@@ -74,13 +91,13 @@ Keep your thinking process (<think> block) extremely short (under 15 words) to o
       nutrition = JSON.parse(cleaned);
     } catch (e) {
       console.error('[scan-food] JSON Parse Error. Raw:', rawText, 'Cleaned:', cleaned, 'Error:', e);
-      res.status(502).json({ error: 'Could not parse response', raw: rawText, cleaned });
+      res.status(502).json({ error: 'The AI returned an unexpected response. Please try again.' });
       return;
     }
 
     res.status(200).json(nutrition);
   } catch (err) {
     console.error('[scan-food] Unexpected error:', err);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Something went wrong on our end. Please try again.' });
   }
 }
