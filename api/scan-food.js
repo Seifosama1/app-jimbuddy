@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   const { imageBase64, mimeType = 'image/jpeg' } = req.body || {};
   if (!imageBase64) { res.status(400).json({ error: 'imageBase64 is required' }); return; }
 
-  const apiKey = process.env.GROQ_API_KEY;
+  const apiKey = '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';
   if (!apiKey) { res.status(500).json({ error: 'API key not configured' }); return; }
 
   const prompt = `You are a precise nutrition analyst. Analyze this food image and return ONLY a valid JSON object with these exact fields:
