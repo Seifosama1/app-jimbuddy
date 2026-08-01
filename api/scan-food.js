@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   const { imageBase64, mimeType = 'image/jpeg' } = req.body || {};
   if (!imageBase64) { res.status(400).json({ error: 'imageBase64 is required' }); return; }
 
-  const apiKey = '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';
+  const apiKey = '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';
   if (!apiKey) { res.status(500).json({ error: 'API key not configured' }); return; }
 
   const prompt = `You are a precise nutrition analyst. Analyze this food image and return ONLY a valid JSON object with these exact fields:
@@ -42,6 +42,8 @@ Return ONLY the JSON, no markdown, no explanation.`;
       })
     });
 
+    console.log('[scan-food] Groq response status:', groqRes.status);
+
     if (!groqRes.ok) {
       const errText = await groqRes.text();
       console.error('[scan-food] Groq error:', errText);
@@ -51,6 +53,7 @@ Return ONLY the JSON, no markdown, no explanation.`;
 
     const groqData = await groqRes.json();
     const rawText = groqData?.choices?.[0]?.message?.content || '';
+    console.log('[scan-food] Groq Raw Text:', rawText);
     
     // Strip reasoning <think>...</think> tags
     let cleaned = rawText.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
@@ -62,11 +65,13 @@ Return ONLY the JSON, no markdown, no explanation.`;
     if (jsonStart !== -1 && jsonEnd !== -1) {
       cleaned = cleaned.substring(jsonStart, jsonEnd + 1);
     }
+    console.log('[scan-food] Cleaned Text:', cleaned);
 
     let nutrition;
     try {
       nutrition = JSON.parse(cleaned);
-    } catch {
+    } catch (e) {
+      console.error('[scan-food] JSON Parse Error. Raw:', rawText, 'Cleaned:', cleaned, 'Error:', e);
       res.status(502).json({ error: 'Could not parse response', raw: rawText, cleaned });
       return;
     }
