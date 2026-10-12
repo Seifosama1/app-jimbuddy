@@ -31,7 +31,7 @@
   --bg3: #e9ecf3;
   --card: rgba(0, 0, 0, 0.03);
   --card-border: rgba(0, 0, 0, 0.09);
-  --accent: #02805e;
+  --accent: #00926a;
   --accent2: #0076a0;
   --accent-dim: rgba(0, 146, 106, 0.1);
   --danger: #d42f3e;
@@ -264,8 +264,8 @@
 .light-theme .calorie-summary-card {
   background: linear-gradient(
     135deg,
-    rgba(0, 146, 107, 0.199),
-    rgba(115, 210, 245, 0.04)
+    rgba(0, 146, 106, 0.07),
+    rgba(0, 118, 160, 0.04)
   ) !important;
   border: 1px solid rgba(0, 0, 0, 0.1) !important;
 }
@@ -8184,4 +8184,3 @@ html.no-blur .gymbro-friend-card {
 .check-all-btn:active {
   transform: scale(0.93);
 }
-

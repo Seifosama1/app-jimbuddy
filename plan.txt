@@ -1,0 +1,100 @@
+# Jim Buddy — Gym Tracker Web App
+
+A mobile-optimized, single-page web application (HTML + CSS + Vanilla JS) with local storage for persistence.
+
+---
+
+## App Overview
+
+**Jim Buddy** is a beautiful, dark-themed, mobile-first PWA-style gym tracking app. No backend needed — all data persists in `localStorage`.
+
+---
+
+## Features
+
+### 1. Workout Library
+- Pre-loaded with **50+ famous exercises** organized by muscle group:
+  - **Chest**: Bench Press, Incline Bench, Dumbbell Fly, Push-Up, Cable Crossover, Dip
+  - **Back**: Deadlift, Pull-Up, Lat Pulldown, Seated Cable Row, T-Bar Row, Barbell Row
+  - **Shoulders**: Overhead Press, Lateral Raise, Front Raise, Arnold Press, Face Pull
+  - **Legs**: Squat, Leg Press, Romanian Deadlift, Leg Curl, Leg Extension, Calf Raise, Hack Squat, Lunges
+  - **Arms**: Barbell Curl, Hammer Curl, Tricep Pushdown, Skull Crusher, Preacher Curl, Dips
+  - **Core**: Plank, Crunches, Russian Twist, Hanging Leg Raise, Ab Rollout
+  - **Cardio**: Treadmill, Cycling, Jump Rope, Rowing
+
+### 2. Custom Workout Creator
+- Name your workout
+- Add sets, reps, rest time (seconds)
+- Save to personal library
+- Edit/delete custom workouts
+
+### 3. Workout Session Logging
+- Start a workout session
+- Log weight lifted per set per exercise
+- Track sets completed with checkboxes
+- Rest timer countdown between sets
+- Save full session history
+
+### 4. Progression Tracking
+- View weight history per exercise as a chart (Chart.js)
+- Personal Records (PR) highlighted
+- Session history log
+
+### 5. Weekly Weight Goals
+- Set a target weight for any exercise for the current week
+- Track progress toward goal
+- Visual progress bar
+- Notifications when goal is hit
+
+### 6. Water Intake Tracker
+- Daily water goal (user-configurable, default 2L)
+- Log water intake in ml or cups
+- Visual fill animation
+- Daily history
+
+### 7. Navigation (Bottom Tab Bar)
+- 🏠 Dashboard
+- 💪 Workouts
+- 📊 Progress
+- 🎯 Goals
+- 💧 Water
+
+---
+
+## Architecture
+
+### Files
+- `index.html` — main app shell
+- `styles.css` — mobile-first design system
+- `app.js` — app logic, data layer, routing
+- `workouts-data.js` — pre-loaded exercise library
+- `chart.min.js` — charting (CDN)
+
+### Data Model (localStorage)
+```json
+{
+  "customWorkouts": [],
+  "sessions": [],
+  "weeklyGoals": [],
+  "waterLog": [],
+  "settings": { "waterGoal": 2000 }
+}
+```
+
+---
+
+## Design System
+- **Theme**: Dark mode with electric green/teal accent (`#00E5A0`)
+- **Font**: Inter (Google Fonts)
+- **Cards**: Glassmorphism style with subtle borders
+- **Animations**: Smooth page transitions, progress fill, button ripples
+- **Layout**: Max-width 430px centered, safe area insets
+
+---
+
+## Verification Plan
+- Open on mobile Chrome/Safari — layout fits screen
+- Add a custom workout → appears in library
+- Log a session → data saved and visible in Progress
+- Set a weekly goal → appears in Goals tab
+- Log water → visual updates correctly
