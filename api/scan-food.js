@@ -14,14 +14,12 @@ export default async function handler(req, res) {
   const { imageBase64, mimeType = 'image/jpeg' } = req.body || {};
   if (!imageBase64) { res.status(400).json({ error: 'imageBase64 is required' }); return; }
 
-  const apiKey = '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';
+  const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) { res.status(500).json({ error: 'API key not configured' }); return; }
 
   const prompt = `You are a precise nutrition analyst. Analyze this food image and return ONLY a valid JSON object with these exact fields:
 {"name":"food name (be specific)","calories":<kcal>,"protein":<g>,"carbs":<g>,"fats":<g>,"fiber":<g or null>,"servingSize":"<estimated portion>","confidence":"<high|medium|low>","notes":"<brief note>"}
-Return ONLY the JSON, no markdown, no explanation.
-Analyze the food image and estimate macronutrients for a standard single serving (~200g-250g for burgers). Calculate total calories strictly using the formula: Calories = (Protein * 4) + (Carbs * 4) + (Fat * 9).
-Keep your thinking process (<think> block) extremely short (under 15 words) to optimize tokens. Do not write a long analysis.`;
+Return ONLY the JSON, no markdown, no explanation.`;
 
   try {
     const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -31,7 +29,7 @@ Keep your thinking process (<think> block) extremely short (under 15 words) to o
         'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: 'qwen/qwen3.6-27b',
+        model: 'meta-llama/llama-4-scout-17b-16e-instruct',
         messages: [{
           role: 'user',
           content: [
@@ -40,64 +38,32 @@ Keep your thinking process (<think> block) extremely short (under 15 words) to o
           ]
         }],
         temperature: 0.1,
-        max_tokens: 2048
+        max_tokens: 512
       })
     });
-
-    console.log('[scan-food] Groq response status:', groqRes.status);
 
     if (!groqRes.ok) {
       const errText = await groqRes.text();
       console.error('[scan-food] Groq error:', errText);
-
-      let userMessage = 'The AI service is temporarily unavailable. Please try again.';
-      try {
-        const errJson = JSON.parse(errText);
-        const code = errJson?.error?.code || '';
-        const msg  = errJson?.error?.message || '';
-        if (groqRes.status === 429 || code === 'rate_limit_exceeded') {
-          userMessage = 'Too many scans too quickly. Please wait a few seconds and try again.';
-        } else if (groqRes.status === 401 || code === 'invalid_api_key') {
-          userMessage = 'AI service authentication failed. Please contact support.';
-        } else if (msg.toLowerCase().includes('image')) {
-          userMessage = 'Could not read the image. Please try a clearer photo.';
-        } else if (groqRes.status === 503 || groqRes.status === 504) {
-          userMessage = 'The AI service is overloaded right now. Please try again in a moment.';
-        }
-      } catch (_) {}
-
-      res.status(502).json({ error: userMessage });
+      res.status(502).json({ error: 'Groq API error', detail: errText });
       return;
     }
 
     const groqData = await groqRes.json();
     const rawText = groqData?.choices?.[0]?.message?.content || '';
-    console.log('[scan-food] Groq Raw Text:', rawText);
-    
-    // Strip reasoning <think>...</think> tags
-    let cleaned = rawText.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
-    cleaned = cleaned.replace(/```json|```/g, '').trim();
-
-    // Extract JSON block
-    const jsonStart = cleaned.indexOf('{');
-    const jsonEnd = cleaned.lastIndexOf('}');
-    if (jsonStart !== -1 && jsonEnd !== -1) {
-      cleaned = cleaned.substring(jsonStart, jsonEnd + 1);
-    }
-    console.log('[scan-food] Cleaned Text:', cleaned);
+    const cleaned = rawText.replace(/```json|```/g, '').trim();
 
     let nutrition;
     try {
       nutrition = JSON.parse(cleaned);
-    } catch (e) {
-      console.error('[scan-food] JSON Parse Error. Raw:', rawText, 'Cleaned:', cleaned, 'Error:', e);
-      res.status(502).json({ error: 'The AI returned an unexpected response. Please try again.' });
+    } catch {
+      res.status(502).json({ error: 'Could not parse response', raw: rawText });
       return;
     }
 
     res.status(200).json(nutrition);
   } catch (err) {
     console.error('[scan-food] Unexpected error:', err);
-    res.status(500).json({ error: 'Something went wrong on our end. Please try again.' });
+    res.status(500).json({ error: 'Internal server error' });
   }
 }
