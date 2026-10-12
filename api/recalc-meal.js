@@ -3,6 +3,8 @@
 // Body: { items: ["300g Chicken Breast", "1 cup Rice", ...] }
 // Returns: { items: [...], calories, protein, carbs, fats }
 
+import { fetchWithGroqPool } from './groq-pool.js';
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -17,11 +19,19 @@ export default async function handler(req, res) {
     return;
   }
 
-  const apiKey = process.env.GROQ_API_KEY || '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';
-  if (!apiKey) { res.status(500).json({ error: 'API key not configured' }); return; }
+  // Guard: cap items to 20 entries, 200 chars each, to prevent prompt injection
+  const safeItems = items
+    .slice(0, 20)
+    .map(i => String(i).slice(0, 200))
+    .filter(i => i.trim().length > 0);
+
+  if (!safeItems.length) {
+    res.status(400).json({ error: 'No valid food items provided' });
+    return;
+  }
 
   const prompt = `You are a precise nutrition analyst. Here is a list of food items with quantities for ONE meal, as edited by a user:
-${items.map(i => `- ${i}`).join('\n')}
+${safeItems.map(i => `- ${i}`).join('\n')}
 
 Calculate realistic total nutrition for this meal (sum across all items).
 Return ONLY valid JSON, compact, no markdown fences, no explanation, matching exactly this shape:
@@ -32,20 +42,15 @@ Rules:
 - calories/protein/carbs/fats are numbers (protein/carbs/fats in grams) for the WHOLE meal combined.`;
 
   try {
-    const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        messages: [{ role: 'user', content: prompt }],
-        temperature: 0.3,
-        max_tokens: 1024,
-        response_format: { type: "json_object" }
-      })
-    });
+    const payload = {
+      model: 'qwen/qwen3.8-27b',
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.3,
+      max_tokens: 1024,
+      response_format: { type: "json_object" }
+    };
+
+    const groqRes = await fetchWithGroqPool(payload);
 
     if (!groqRes.ok) {
       const errText = await groqRes.text();
